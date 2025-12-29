@@ -49,7 +49,7 @@ export default function Header() {
                 className="md:h-30 h-20  w-auto object-contain"
               />
               <span className="text-xl sm:text-2xl md:text-2xl font-bold text-primary poppins-semibold tracking-wide truncate">
-                Skiez Pdf Books
+                Easy pass Guide
               </span>
             </Link>
 
@@ -58,12 +58,14 @@ export default function Header() {
               <Link to="/" className={`poppins-medium ${isActive("/")}`}>
                 Home
               </Link>
-              <Link
-                to="/guide"
-                className={`poppins-medium ${isActive("/guide")}`}
-              >
-                Browse Guide
-              </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/dashboard"
+                  className={`poppins-medium ${isActive("/dashboard")}`}
+                >
+                  My Guides
+                </Link>
+              )}
               <Link
                 to="/courses"
                 className={`poppins-medium ${isActive("/courses")}`}
@@ -139,6 +141,16 @@ export default function Header() {
           >
             Home
           </Link>
+
+          {isAuthenticated && (
+            <Link
+              to="/dashboard"
+              className={`poppins-medium ${isActive("/dashboard")}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              My Guides
+            </Link>
+          )}
 
           <Link
             to="/guide"

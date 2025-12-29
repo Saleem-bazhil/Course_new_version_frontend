@@ -1,3 +1,4 @@
+// src/components/GuideCard.jsx
 import React from "react";
 import { motion } from "framer-motion";
 import {
@@ -7,15 +8,17 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { BookOpen, Lock, Star, Eye } from "lucide-react";
+import { Lock, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import maths from "../assets/math.png";
-import physics from "../assets/physics.png";
-import chemistry from "../assets/chemistry.png";
+const maths =
+  "https://res.cloudinary.com/dwupqb1pj/image/upload/v1765368110/2_Samacheer_Kalvi_2_gkz4kd.png";
+const chemistry =
+  "https://res.cloudinary.com/dwupqb1pj/image/upload/v1765368109/2_Samacheer_Kalvi_3_tm2hxe.png";
+// fallback for physics (avoid ReferenceError)
+const physics = maths;
 
-const GuideCard = ({ guides, setSelectedGuide }) => {
+const GuideCard = ({ guides }) => {
   const safeGuides = Array.isArray(guides) ? guides : [];
   const navigate = useNavigate();
 
@@ -27,7 +30,7 @@ const GuideCard = ({ guides, setSelectedGuide }) => {
     );
   }
 
-  // get current user id (if you store it in localStorage after login)
+  // Current user (for paid key)
   let currentUserId = null;
   try {
     const rawUser = localStorage.getItem("user");
@@ -49,40 +52,29 @@ const GuideCard = ({ guides, setSelectedGuide }) => {
       "
     >
       {safeGuides.map((guide, index) => {
-        const id = guide._id || guide.id; // Mongo _id
+        const id = guide._id || guide.id;
 
         const subject = guide.subject || guide.category || "Study Guide";
+        const title = guide.title || "Complete Guide";
 
-        const price =
-          typeof guide.price === "number"
-            ? `₹${guide.price}`
-            : guide.price || "₹0";
+        const priceNumber =
+          typeof guide.price === "number" ? guide.price : Number(guide.price);
+        const price = isNaN(priceNumber) ? "₹49" : `₹${priceNumber}`;
 
-        const rating =
-          typeof guide.rating === "number"
-            ? guide.rating.toFixed(1)
-            : guide.rating || "4.8";
-
-        const students = guide.students ?? guide.ratingCount ?? 0;
         const chapters = guide.chapters || 0;
+        const description =
+          guide.shortDescription ||
+          guide.description ||
+          "Premium 12th standard guide with solved examples and exam-focused explanations.";
 
-        const topics = Array.isArray(guide.topics)
-          ? guide.topics
-          : Array.isArray(guide.tags)
-          ? guide.tags
-          : [];
-
-        // 🔥 Always choose one of our local images based on subject/title
+        // local image selection
         const subjLower = (subject || "").toLowerCase();
-        const titleLower = (guide.title || "").toLowerCase();
-        let imgSrc = maths; // default
+        const titleLower = (title || "").toLowerCase();
+        let imgSrc = maths;
 
         if (subjLower.includes("physics") || titleLower.includes("physics")) {
           imgSrc = physics;
-        } else if (
-          subjLower.includes("chem") ||
-          titleLower.includes("chem")
-        ) {
+        } else if (subjLower.includes("chem") || titleLower.includes("chem")) {
           imgSrc = chemistry;
         } else if (
           subjLower.includes("math") ||
@@ -92,11 +84,9 @@ const GuideCard = ({ guides, setSelectedGuide }) => {
           imgSrc = maths;
         }
 
-        // debug (you can remove after checking)
-        console.log("Guide:", guide.title, "→ subject:", subject, "→ img:", imgSrc);
+        // local paid flag
         const paidKey =
           currentUserId && id ? `paid_${currentUserId}_${id}` : null;
-
         const isPaid = paidKey
           ? localStorage.getItem(paidKey) === "true"
           : false;
@@ -106,177 +96,132 @@ const GuideCard = ({ guides, setSelectedGuide }) => {
             key={id || index}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            transition={{ duration: 0.45, delay: index * 0.08 }}
             viewport={{ once: true }}
             className="relative group"
           >
-            {/* Glow Hover Effect */}
+            {/* subtle glow on hover */}
             <div
               className="
-                absolute -inset-[1px] 
-                bg-gradient-to-r from-blue-400/40 via-blue-500/30 to-indigo-500/40 
-                blur-xl opacity-0 group-hover:opacity-70 
-                transition-all duration-700 rounded-2xl pointer-events-none
+                absolute -inset-[1px]
+                bg-gradient-to-r from-blue-400/35 via-blue-500/25 to-indigo-500/35
+                rounded-3xl blur-xl opacity-0
+                group-hover:opacity-100 transition-all duration-700
               "
             />
 
             <Card
               className="
-                relative overflow-hidden rounded-2xl border border-blue-100 
-                bg-white/95 shadow-sm hover:shadow-xl 
-                transition-all duration-500 hover:-translate-y-2 
-                backdrop-blur-sm z-10
+                relative h-full flex flex-col
+                rounded-3xl border border-blue-100/70 
+                bg-white/90 backdrop-blur-sm 
+                shadow-sm hover:shadow-xl hover:-translate-y-2
+                transition-all duration-500
+                overflow-hidden z-10
               "
             >
-              <CardHeader
-                className="
-                  relative h-40 sm:h-48 flex items-center justify-center 
-                  p-0 rounded-t-2xl overflow-hidden 
-                  bg-gray-50 {/* Added a light background color for the empty space */}
-                "
-              >
-                {/* Image layer - CHANGED object-cover TO object-contain */}
-                <img
-                  src={imgSrc}
-                  alt={guide.title || "Guide"}
-                  className="absolute inset-0 w-full h-full object-contain p-2 rounded-t-2xl" 
-                  onError={(e) => {
-                    e.target.style.display = "none";
-                  }}
-                />
-
-              </CardHeader>
-
-              <CardContent className="p-5 sm:p-6 space-y-4 sm:space-y-5">
-                <div>
-                  <Badge
-                    variant="outline"
+              {/* IMAGE + PURCHASED BADGE */}
+              <CardHeader className="pb-0 pt-0 px-0">
+                {/* removed inner bg and border so image bleeds to card edges */}
+                <div className="relative rounded-t-2xl overflow-hidden">
+                  <img
+                    src={imgSrc}
+                    alt={title}
+                    style={{ objectPosition: "top" }}
                     className="
-                      mb-2 text-xs sm:text-sm px-3 py-1 
-                      rounded-full border-blue-200 text-blue-700 bg-blue-50
+                      w-full
+                      h-90        /* mobile: compact */
+                      sm:h-48     /* small screens */
+                      md:h-64     /* tablets */
+                      lg:h-80     /* desktop big */
+                      xl:h-96     /* xl desktop */
+                      object-cover
+                      transition-transform duration-500
+                      group-hover:scale-[1.03]
                     "
-                  >
-                    {subject}
-                  </Badge>
-                  <h3
-                    className="
-                      text-lg sm:text-xl font-semibold leading-snug text-gray-900 
-                      group-hover:text-blue-700 transition-colors
-                    "
-                  >
-                    {guide.title}
-                  </h3>
-                </div>
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
 
-                <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
-                  <div className="flex items-center gap-1 sm:gap-2 text-blue-700">
-                    <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
-                    <span className="font-medium text-gray-900">{rating}</span>
-                    <span>({students})</span>
-                  </div>
-                  <div className="font-medium text-gray-600">
-                    {chapters} Chapters
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {topics.slice(0, 3).map((topic, i) => (
-                    <Badge
-                      key={i}
-                      variant="secondary"
+                  {isPaid && (
+                    <div
                       className="
-                        text-[11px] sm:text-xs px-2.5 py-1 
-                        rounded-full bg-blue-50 text-blue-700 border border-blue-100
+                        absolute top-3 left-3
+                        rounded-full bg-emerald-500/95 text-white
+                        text-[10px] sm:text-xs font-semibold
+                        px-2.5 py-1 flex items-center gap-1 shadow-sm
                       "
                     >
-                      {topic}
-                    </Badge>
-                  ))}
-                  {topics.length > 3 && (
-                    <span className="text-[11px] sm:text-xs text-blue-600">
-                     
-                    </span>
+                      <CheckCircle2 className="h-3 w-3" />
+                      Purchased
+                    </div>
                   )}
                 </div>
+              </CardHeader>
+
+              {/* CONTENT */}
+              <CardContent className="px-5 sm:px-6 pt-4 pb-3 flex-1 flex flex-col gap-2 text-center">
+                <button
+                  onClick={() =>
+                    navigate(`/book-detail/${guide._id || guide.id}`, {
+                      state: { guide },
+                    })
+                  }
+                  className="
+                    text-sm sm:text-base font-extrabold text-slate-900 
+                    hover:text-blue-700 transition-colors
+                    lg:text-lg
+                  "
+                >
+                  {title}
+                </button>
+
+                <p className="text-xs sm:text-sm lg:text-[13px] xl:text-[12px] text-slate-700 leading-relaxed mt-1">
+                  {description}
+                </p>
+
+                <p className="text-xs sm:text-sm font-semibold text-blue-600 mt-1">
+                  Chapters: {chapters}
+                </p>
               </CardContent>
 
-              <CardFooter
-                className="
-                  flex flex-col border-t border-blue-100/60 
-                  p-5 sm:p-6 pt-4 sm:pt-5 space-y-4
-                "
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span
+              {/* FOOTER */}
+              <CardFooter className="px-5 sm:px-6 pt-2 pb-5 border-t border-blue-100/70 bg-slate-50/70 flex flex-col gap-2">
+                <div className="flex items-end justify-between w-full">
+                  <div>
+                    <p
+                      className="
+                        text-2xl sm:text-3xl font-extrabold 
+                        bg-gradient-to-r from-blue-600 to-indigo-600 
+                        bg-clip-text text-transparent
+                      "
+                    >
+                      {price}
+                    </p>
+                    <p className="text-[11px] sm:text-xs text-gray-500">
+                      one-time
+                    </p>
+                    {isPaid && (
+                      <p className="text-[11px] sm:text-xs text-emerald-600 font-semibold mt-1">
+                        Already purchased
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    onClick={() =>
+                      navigate(`/book-detail/${guide._id}`, { state: { guide } })
+                    }
                     className="
-                      text-2xl sm:text-3xl font-bold 
-                      bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent
+                      rounded-full px-5 sm:px-7 py-2 sm:py-2.5
+                      text-xs sm:text-sm font-semibold
+                      bg-blue-600 hover:bg-blue-700 
+                      text-white shadow-md
                     "
                   >
-                    {price}
-                  </span>
-                  <span className="text-xs sm:text-sm text-gray-500 font-medium">
-                    one-time
-                  </span>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex w-full gap-2">
-                  <Button
-                    onClick={() => {
-                      console.log("Buy Now clicked for guide:", guide);
-                      if (typeof setSelectedGuide === "function") {
-                        setSelectedGuide(guide);
-                      } else {
-                        console.warn("setSelectedGuide is not a function");
-                      }
-                    }}
-                    className="
-                      flex-1 rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 
-                      hover:brightness-110 text-white transition-all 
-                      shadow-md py-3 sm:py-5 text-sm sm:text-base font-semibold
-                    "
-                    aria-label={`Buy ${guide.title}`}
-                  >
-                    Buy Now
+                    {isPaid ? "View Guide" : "Buy Now"}
                   </Button>
-
-                  {/* View Button */}
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      if (!id) {
-                        alert("Guide id missing");
-                        return;
-                      }
-
-                      if (isPaid) {
-                        navigate(`/viewer/${id}`);
-                      } else {
-                        alert(
-                          " Please complete your payment before viewing this guide."
-                        );
-                      }
-                    }}
-                    className={`
-                      rounded-xl border-blue-300 
-                      transition-all flex items-center justify-center
-                      ${
-                        isPaid
-                          ? "bg-green-50 text-green-600 border-green-300"
-                          : "text-blue-600 hover:bg-blue-50"
-                      }
-                    `}
-                    title={isPaid ? "View Guide" : "Locked"}
-                  >
-                    <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </Button>
-                </div>
-
-                <div className="flex items-center gap-2 text-[10px] sm:text-xs text-blue-600/80 pt-1">
-                  <Lock className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Protected viewing • No downloads</span>
                 </div>
               </CardFooter>
             </Card>

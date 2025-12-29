@@ -11,6 +11,8 @@ import Viewer from "./layout/Viewer";
 import Login from "./authentication/Login";
 import Signup from "./authentication/Signup";
 import CoursesUnderConstruction from "./courses/CourseUnderConstruction";
+import BookDetail from "./guidesection/BookDetail";
+import Dashboard from "./dashboard/Dashboard";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -30,8 +32,8 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
+        {/* <Route
+          path="/guide"
           element={
             <motion.div
               initial="initial"
@@ -43,9 +45,9 @@ function AnimatedRoutes() {
               <Hero />
             </motion.div>
           }
-        />
+        /> */}
         <Route
-          path="/guide"
+          path="/"
           element={
             <motion.div
               initial="initial"
@@ -55,6 +57,20 @@ function AnimatedRoutes() {
               transition={pageTransition}
             >
               <Guide />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <Dashboard />
             </motion.div>
           }
         />
@@ -72,35 +88,35 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
-          <Route
-            path="/viewer"
-            element={
-              <motion.div
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={pageTransition}
-              >
-                <Viewer />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/viewer/:guideId"
-            element={
-              <motion.div
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={pageTransition}
-              >
-                <Viewer />
-              </motion.div>
-            }
-          />
-          <Route
+        <Route
+          path="/viewer"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <Viewer />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/viewer/:guideId"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <Viewer />
+            </motion.div>
+          }
+        />
+        <Route
           path="/login"
           element={
             <motion.div
@@ -114,7 +130,7 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
-          <Route
+        <Route
           path="/courses"
           element={
             <motion.div
@@ -128,7 +144,7 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
-          <Route
+        <Route
           path="/signup"
           element={
             <motion.div
@@ -142,6 +158,7 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
+        <Route path="/book-detail/:guideId" element={<BookDetail />} />
       </Routes>
     </AnimatePresence>
   );

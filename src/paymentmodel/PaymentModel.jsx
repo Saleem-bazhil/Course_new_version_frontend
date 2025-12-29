@@ -1,3 +1,4 @@
+// src/paymentmodel/PaymentModel.jsx
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -10,92 +11,112 @@ const PaymentModal = ({ guide, onClose }) => {
 
   const handlePayment = async () => {
     try {
-      console.log("🔹 Starting payment for:", guide.title);
-
-      const guideId = guide._id || guide.id;
-
-      // 1️⃣ Create Razorpay order in backend
-      const { data } = await api.post(`/payment/create-order/${guideId}`);
-      console.log("✅ Order created from backend:", data);
-
-      if (!data?.success) {
-        alert("Failed to create order. Please try again.");
+      if (!guide) {
+        alert("Guide details are missing. Please try again.");
         return;
       }
 
+      const guideId = guide._id || guide.id;
+      if (!guideId) {
+        console.error("❌ guideId is missing:", guide);
+        alert("Invalid guide. Please go back and try again.");
+        return;
+      }
+
+      console.log("🔹 Starting payment for:", guide.title, "→", guideId);
+
+      // 1️⃣ Get auth token
+      const rawUser = localStorage.getItem("user");
+      const user = rawUser ? JSON.parse(rawUser) : null;
+      const token = user?.token || localStorage.getItem("token");
+
+      if (!token) {
+        alert("Please login to continue payment.");
+        navigate("/login");
+        return;
+      }
+
+      // 2️⃣ Create Razorpay order
+      const { data } = await api.post(
+        "/payment/order",
+        {
+          amount: guide.price || 49,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("✅ Order created from backend:", data);
+
+      if (!data?.success || !data?.data?.order) {
+        alert("Invalid order response from server.");
+        return;
+      }
+
+      const order = data.data.order;
+
       const options = {
-        key: data.keyId,
-        amount: data.amount,
-        currency: data.currency || "INR",
-        name: "Skiez Tech",
+        key: import.meta.env.VITE_RAZORPAY_KEY,
+        amount: order.amount,
+        currency: order.currency || "INR",
+        name: "Skiez Pdf Books",
         description: `Purchase of ${guide.title}`,
-        order_id: data.orderId,
+        order_id: order.id,
 
         handler: async function (response) {
           try {
-            console.log("✅ Razorpay success:", response);
+            console.log("💰 Razorpay success:", response);
 
-            // 2️⃣ Verify payment on backend
-            const verifyRes = await api.post("/payment/verify", {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              guideId,
-            });
+            // 3️⃣ Verify payment
+            const verifyRes = await api.post(
+              "/payment/paymentVerification",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                guideId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
             if (!verifyRes.data.success) {
               alert("Payment verification failed on server.");
               return;
             }
 
-            // 3️⃣ Save purchase record
+            // 4️⃣ Mark as paid locally (NO backend purchase API)
             try {
-              await api.post("/purchase/buy", {
-                guideId,
-                paymentId: response.razorpay_payment_id,
-              });
-            } catch (err) {
-              const status = err.response?.status;
-              const msg =
-                err.response?.data?.error || err.response?.data?.message;
-
-              // If backend says "Already purchased", we treat it as success
-              if (status === 400 && msg === "Already purchased") {
-                console.log("ℹ️ User already purchased this guide, continuing.");
-              } else {
-                console.error("❌ Purchase save error:", err);
-                alert("Payment verified but could not save purchase. Contact support.");
-                return;
-              }
-            }
-
-            // 4️⃣ Mark as paid in localStorage for THIS user + THIS guide
-            try {
-              const rawUser = localStorage.getItem("user");
-              const user = rawUser ? JSON.parse(rawUser) : null;
               const userId = user?._id || user?.id;
-
               if (userId) {
                 localStorage.setItem(`paid_${userId}_${guideId}`, "true");
               }
             } catch (e) {
-              console.warn("Could not save paid flag:", e);
+              console.warn("⚠️ Could not save paid flag:", e);
             }
 
-            alert("🎉 Payment Successful! Guide unlocked.");
+            alert("✅ Payment Successful! Guide unlocked.");
             onClose();
-            // 5️⃣ Go to viewer for this specific guide
             navigate(`/viewer/${guideId}`);
           } catch (err) {
-            console.error("❌ Error after payment:", err);
-            alert("Something went wrong after payment. Please contact support.");
+            console.error("Error after payment:", err);
+            alert(
+              "Something went wrong after payment. Please contact support."
+            );
           }
         },
 
         prefill: {
-          name: "Suhas",
-          email: "suhas@example.com",
+          name: user?.name || "your name",
+          email: user?.email || "yourname@gmail.com",
         },
+
         theme: {
           color: "#4f46e5",
         },
@@ -104,14 +125,21 @@ const PaymentModal = ({ guide, onClose }) => {
       const razor = new window.Razorpay(options);
 
       razor.on("payment.failed", function (response) {
-        console.error("❌ Payment failed:", response.error);
+        console.error("Payment failed:", response.error);
         alert("Payment Failed: " + response.error.description);
       });
 
       razor.open();
     } catch (error) {
-      console.error("🔥 Razorpay Error:", error);
-      alert("Payment Failed. Please try again.");
+      console.error(
+        "Razorpay Error:",
+        error.response?.data || error.message || error
+      );
+      alert(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Payment Failed. Please try again."
+      );
     }
   };
 
@@ -133,7 +161,6 @@ const PaymentModal = ({ guide, onClose }) => {
           w-[90%] sm:w-[400px] p-8 text-center
         "
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
@@ -141,23 +168,21 @@ const PaymentModal = ({ guide, onClose }) => {
           <XCircle className="h-5 w-5" />
         </button>
 
-        {/* Guide Title */}
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {guide.title}
         </h2>
+
         <p className="text-gray-500 mb-6">
           {guide.subject} • Lifetime Access
         </p>
 
-        {/* Price Section */}
         <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-200 rounded-xl py-5 mb-6">
           <h3 className="text-4xl font-bold text-blue-600">
-            {guide.price}
+            ₹{guide.price}
           </h3>
           <p className="text-gray-500 text-sm">One-time payment</p>
         </div>
 
-        {/* Pay Button */}
         <Button
           onClick={handlePayment}
           className="
@@ -169,7 +194,6 @@ const PaymentModal = ({ guide, onClose }) => {
           Pay Now
         </Button>
 
-        {/* Secure Payment */}
         <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-4">
           <ShieldCheck className="h-4 w-4 text-green-500" />
           <span>100% Secure Payment with Razorpay</span>

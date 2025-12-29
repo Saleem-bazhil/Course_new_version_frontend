@@ -23,18 +23,27 @@ const Login = () => {
     }),
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        // 🔹 Call your backend: POST /auth/login
-        const res = await api.post("/auth/login", values);
+        // 🔹 Call your backend: POST /users/login (wrapped by success helper)
+        const res = await api.post("/users/login", values);
 
         console.log("Login success:", res.data);
 
-        // 🔹 Save token & user info (adjust as you like)
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        // Backend response shape: { success, data: { token, user }, message }
+        const payload = res.data?.data || {};
+        const token = payload.token;
+        const user = payload.user;
+
+        if (!token || !user) {
+          throw new Error("Invalid login response from server");
+        }
+
+        // 🔹 Save token & user info
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
         alert("Login successful!");
-        // e.g. navigate to dashboard
-        navigate("/");
+        // Go to dashboard with purchased guides
+        navigate("/dashboard");
       } catch (error) {
         console.error("LOGIN ERROR:", error);
         const message =

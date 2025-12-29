@@ -1,26 +1,28 @@
+// src/components/Guide.jsx
 import { useEffect, useState } from "react";
 import SearchFilter from "./SearchFilter";
 import GuideCard from "./GuideCard";
 import { motion } from "framer-motion";
-import PaymentModal from "../paymentmodel/PaymentModel";
 import api from "../Api";
 
 const Guide = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedGuide, setSelectedGuide] = useState(null);
   const [guides, setGuides] = useState([]);
 
-  useEffect(() => {
-    api
-      .get("/guides")
-      .then((response) => {
-        console.log("Guides API Response:", response);
-        setGuides(response.data || []);
-      })
-      .catch((error) => {
-        console.error("Error fetching guides:", error);
-      });
-  }, []);
+useEffect(() => {
+  api
+    .get("/pdf")
+    .then((response) => {
+      console.log("pdf API Response:", response.data);
+
+      setGuides(response.data.data || []);
+    })
+    .catch((error) => {
+      console.error("Error fetching pdf:", error);
+      setGuides([]);
+    });
+}, []);
+
 
   const filteredGuides = guides.filter((guide) => {
     const subject = (guide?.subject || guide?.category || "").toLowerCase();
@@ -42,7 +44,7 @@ const Guide = () => {
             className="mb-10 sm:mb-12 md:mb-16 px-3 sm:px-6"
           >
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-3 sm:mb-4">
-              Secure Study{" "}
+              Easy pass{" "}
               <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-700 bg-clip-text text-transparent">
                 Guides
               </span>
@@ -64,17 +66,7 @@ const Guide = () => {
           />
 
           {/* Guides */}
-          <GuideCard
-            guides={filteredGuides}
-            setSelectedGuide={setSelectedGuide}
-          />
-
-          {selectedGuide && (
-            <PaymentModal
-              guide={selectedGuide}
-              onClose={() => setSelectedGuide(null)}
-            />
-          )}
+          <GuideCard guides={filteredGuides} />
         </div>
       </div>
     </section>

@@ -27,7 +27,7 @@ const Signup = () => {
     }),
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        const res = await api.post("/auth/register", values);
+        const res = await api.post("/users", values);
 
         console.log("Signup success:", res.data);
         alert("Account created successfully!");
