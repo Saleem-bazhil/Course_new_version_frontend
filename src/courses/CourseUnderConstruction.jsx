@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const CoursesUnderConstruction = () => {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-white text-center px-6">
+    <section className="min-h-screen flex flex-col items-center justify-center bg-background text-center px-6">
       {/* Animated Icon Section */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}

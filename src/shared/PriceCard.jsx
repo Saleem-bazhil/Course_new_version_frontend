@@ -137,7 +137,7 @@ const PriceCard = () => {
                 hover:shadow-lg hover:shadow-violet-500/30 hover:brightness-110
                 transition-all duration-300"
               >
-                <Link to='/guide'>View Guide</Link>
+                <Link to='/'>View Guide</Link>
               </Button>
             </CardFooter>
           </Card>

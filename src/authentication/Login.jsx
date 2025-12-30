@@ -3,8 +3,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import api from "../Api"; // 🔹 Axios instance (or replace with fetch)
+import api from "../Api"; 
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -41,15 +43,27 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-        alert("Login successful!");
+        toast.success("Login Successfully", {
+          style: {
+    background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+    color: "#fff",
+  },
+      position: "top-right"
+    });
         // Go to dashboard with purchased guides
-        navigate("/dashboard");
+        navigate("/");
       } catch (error) {
         console.error("LOGIN ERROR:", error);
         const message =
           error.response?.data?.message || "Something went wrong. Try again.";
         setErrors({ general: message });
-        alert(message);
+        toast.error(message, {
+                 style: {
+                   background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                   color: "#fff",
+                 },
+                 position: "top-right",
+               });
       } finally {
         setSubmitting(false);
       }
@@ -57,20 +71,20 @@ const Login = () => {
   });
 
   return (
-    <section className="min-h-screen flex items-center bg-gradient-to-br from-blue-50 via-indigo-50 to-white py-12 px-4">
+    <section className="min-h-screen flex items-center bg-background py-12 px-4">
       <div className="container mx-auto">
         <div className="max-w-md mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl p-6 sm:p-8 lg:p-10 border border-gray-100"
+            className="bg-card backdrop-blur-md shadow-2xl rounded-3xl p-6 sm:p-8 lg:p-10 border border-border"
           >
             <div className="text-center mb-6 sm:mb-8">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-                Secure <span className="text-blue-600">Study Login</span>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+                Secure <span className="text-primary">Study Login</span>
               </h1>
-              <p className="text-gray-500 mt-2 text-sm sm:text-base">
+              <p className="text-grey mt-2 text-sm sm:text-base">
                 Login using your registered email and password.
               </p>
             </div>
@@ -88,17 +102,17 @@ const Login = () => {
             >
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
+                <label className="block text-sm font-medium mb-2 text-grey">
                   Email Address
                 </label>
                 <input
                   type="email"
                   name="email"
                   placeholder="Enter your email"
-                  className={`w-full border rounded-xl p-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm sm:text-base ${
+                  className={`w-full border rounded-xl p-3 text-grey focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition text-sm sm:text-base ${
                     formik.touched.email && formik.errors.email
                       ? "border-red-400"
-                      : "border-gray-300"
+                      : "border-border"
                   }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -115,17 +129,17 @@ const Login = () => {
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
+                <label className="block text-sm font-medium mb-2 text-grey">
                   Password
                 </label>
                 <input
                   type="password"
                   name="password"
                   placeholder="Enter your password"
-                  className={`w-full border rounded-xl p-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm sm:text-base ${
+                  className={`w-full border rounded-xl p-3 text-grey focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition text-sm sm:text-base ${
                     formik.touched.password && formik.errors.password
                       ? "border-red-400"
-                      : "border-gray-300"
+                      : "border-border"
                   }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -146,18 +160,18 @@ const Login = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={formik.isSubmitting}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transition-all text-sm sm:text-base disabled:opacity-70"
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transition-all text-sm sm:text-base disabled:opacity-70"
               >
                 {formik.isSubmitting ? "Logging in..." : "Login"}
               </motion.button>
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-gray-600 text-sm">
+              <p className="text-grey text-sm">
                 Don’t have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-blue-600 font-semibold hover:underline"
+                  className="text-purple-600 font-semibold hover:underline"
                 >
                   Sign Up
                 </Link>

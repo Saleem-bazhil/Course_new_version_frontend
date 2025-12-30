@@ -4,6 +4,9 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import api from "../Api"; // axios instance
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -30,14 +33,26 @@ const Signup = () => {
         const res = await api.post("/users", values);
 
         console.log("Signup success:", res.data);
-        alert("Account created successfully!");
+        toast.success("Account created successfully!", {
+          style: {
+            background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+            color: "#fff",
+          },
+          position: "top-right",
+        });
         navigate("/login");
       } catch (error) {
         console.error("REGISTER ERROR:", error);
         const message =
           error.response?.data?.message || "Something went wrong. Try again.";
         setErrors({ general: message });
-        alert(message);
+        toast.error(message, {
+          style: {
+            background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+            color: "#fff",
+          },
+          position: "top-right",
+        });
       } finally {
         setSubmitting(false);
       }
@@ -45,20 +60,20 @@ const Signup = () => {
   });
 
   return (
-    <section className="min-h-screen flex items-center bg-gradient-to-br from-blue-50 via-indigo-50 to-white py-12 px-4">
+    <section className="min-h-screen flex items-center bg-background py-12 px-4 mt-10 ">
       <div className="container mx-auto">
         <div className="max-w-md mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl p-6 sm:p-8 lg:p-10 border border-gray-100"
+            className="bg-card backdrop-blur-md shadow-2xl rounded-3xl p-6 sm:p-8 lg:p-10 border border-border"
           >
             <div className="text-center mb-6 sm:mb-8">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-                Create <span className="text-blue-600">Your Account</span>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+                Create <span className="text-purple-600">Your Account</span>
               </h1>
-              <p className="text-gray-500 mt-2 text-sm sm:text-base">
+              <p className="text-grey mt-2 text-sm sm:text-base">
                 Register using your email and password.
               </p>
             </div>
@@ -70,21 +85,23 @@ const Signup = () => {
               </p>
             )}
 
-            <form onSubmit={formik.handleSubmit} className="space-y-4 sm:space-y-6">
-              
+            <form
+              onSubmit={formik.handleSubmit}
+              className="space-y-4 sm:space-y-6"
+            >
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
+                <label className="block text-sm font-medium mb-2 text-grey">
                   Full Name
                 </label>
                 <input
                   type="text"
                   name="name"
                   placeholder="Enter your full name"
-                  className={`w-full border rounded-xl p-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
+                  className={`w-full border rounded-xl p-3 text-grey focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${
                     formik.touched.name && formik.errors.name
                       ? "border-red-400"
-                      : "border-gray-300"
+                      : "border-border"
                   }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -99,17 +116,17 @@ const Signup = () => {
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
+                <label className="block text-sm font-medium mb-2 text-grey">
                   Email Address
                 </label>
                 <input
                   type="email"
                   name="email"
                   placeholder="Enter your email"
-                  className={`w-full border rounded-xl p-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
+                  className={`w-full border rounded-xl p-3 text-grey focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${
                     formik.touched.email && formik.errors.email
                       ? "border-red-400"
-                      : "border-gray-300"
+                      : "border-border"
                   }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -124,17 +141,17 @@ const Signup = () => {
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
+                <label className="block text-sm font-medium mb-2 text-grey">
                   Password
                 </label>
                 <input
                   type="password"
                   name="password"
                   placeholder="Create a password"
-                  className={`w-full border rounded-xl p-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
+                  className={`w-full border rounded-xl p-3 text-grey focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${
                     formik.touched.password && formik.errors.password
                       ? "border-red-400"
-                      : "border-gray-300"
+                      : "border-border"
                   }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -153,7 +170,7 @@ const Signup = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={formik.isSubmitting}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transition disabled:opacity-70"
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transition disabled:opacity-70"
               >
                 {formik.isSubmitting ? "Creating..." : "Create Account"}
               </motion.button>
@@ -162,12 +179,12 @@ const Signup = () => {
             <div className="mt-6 text-center">
               <p className="text-gray-600 text-sm">
                 Already have an account?{" "}
-                <a
-                  href="/login"
-                  className="text-blue-600 font-semibold hover:underline"
+                <Link
+                  to="/login"
+                  className="text-purple-600 font-semibold hover:underline"
                 >
                   Login
-                </a>
+                </Link>
               </p>
             </div>
           </motion.div>

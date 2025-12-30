@@ -113,116 +113,123 @@ useEffect(() => {
   // -------------------------
   // UI (STYLE FROM FIRST CODE)
   // -------------------------
-  return (
-    <div className="bg-background min-h-screen">
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-6 sm:py-8 mt-16 sm:mt-20">
-        <Link
-          to="/"
-          className="mb-4 inline-flex text-sm text-white hover:underline"
-        >
-          ← Back to guides
-        </Link>
+return (
+  <div className="bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 mt-16 sm:mt-20">
+      <Link
+        to="/"
+        className="mb-10 inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition"
+      >
+        ← Back to guides
+      </Link>
 
-        <div className="grid gap-8 lg:gap-10 lg:grid-cols-2">
-          {/* LEFT IMAGE SECTION */}
-          <div className="max-w-md mx-auto lg:mx-0 w-full">
-            <div className="border rounded-2xl bg-card p-3 sm:p-4 shadow-sm">
-              <img
-                src={activeImage}
-                alt={guide.title}
-                className=" w-full max-h-[360px] sm:max-h-[430px] object-contain transition-transform duration-300 hover:scale-105"
-              />
-            </div>
+      <div className="grid gap-10 sm:gap-12 lg:gap-14 lg:grid-cols-2 items-start">
+        {/* LEFT */}
+        <div className="flex flex-col items-center lg:items-start">
+          <div className="w-full max-w-md">
+            <div className="rounded-3xl bg-card shadow-[0_25px_70px_rgba(0,0,0,0.6)]">
+  <div className="h-[300px] sm:h-[380px] md:h-[440px] lg:h-[480px] flex items-center justify-center p-4 sm:p-6">
+    <img
+      src={activeImage}
+      alt={guide.title}
+      className="max-h-full max-w-full object-contain transition-transform duration-500 hover:scale-[1.03]"
+    />
+  </div>
+</div>
 
-            {/* Thumbnails */}
-            {images.length > 1 && (
-              <div className="mt-4 flex gap-3 overflow-x-auto pb-1 justify-center lg:justify-start">
-                {images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveIndex(idx)}
-                    className={`border rounded-xl p-1 min-w-[4.2rem] sm:min-w-[5rem] ${
-                      idx === activeIndex
-                        ? "border-border border-purple-500"
-                        : "border-border"
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`Preview ${idx + 1}`}
-                      className="h-14 sm:h-16 w-full object-contain"
-                    />
-                  </button>
-                ))}
-              </div>
+          </div>
+
+          {images.length > 1 && (
+  <div className="mt-6 flex gap-3  pb-2 justify-start w-full max-w-md px-1">
+    {images.map((img, idx) => (
+      <button
+        key={idx}
+        onClick={() => setActiveIndex(idx)}
+        className={`
+          flex items-center justify-center
+          min-w-[68px] h-[68px] sm:min-w-[88px] sm:h-[88px]
+          rounded-2xl
+          bg-card
+          transition-all
+          ${
+            idx === activeIndex
+              ? "ring-2 ring-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+              : "opacity-70 hover:opacity-100"
+          }
+        `}
+      >
+        <img
+          src={img}
+          alt={`Preview ${idx + 1}`}
+          className="max-h-[48px] max-w-[48px] sm:max-h-[64px] sm:max-w-[64px] object-contain"
+        />
+      </button>
+    ))}
+  </div>
+)}
+
+        </div>
+
+        {/* RIGHT */}
+        <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full max-w-xl mx-auto lg:mx-0 space-y-5 sm:space-y-7">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+            {guide.title}
+          </h1>
+
+          <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+            <span className="px-4 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400">
+              Instant PDF access
+            </span>
+          </div>
+
+          <div className="flex flex-col items-center lg:items-start gap-1">
+            <span className="text-sm text-gray-400 tracking-wide">
+              One-time price
+            </span>
+            <span className="text-4xl font-extrabold text-white">
+              ₹{guide.price || 49}
+            </span>
+          </div>
+
+          <div className="w-full max-w-sm space-y-4 pt-2">
+            {!userPurchased && (
+              <Button
+                onClick={() => setShowPayment(true)}
+                variant="purple"
+                className="w-full py-6 rounded-2xl font-semibold text-lg transition-all hover:scale-[1.03] hover:shadow-[0_12px_30px_rgba(168,85,247,0.35)]"
+              >
+                Buy Now
+              </Button>
+            )}
+
+            {userPurchased && (
+              <Button
+                variant="purple"
+                onClick={() => navigate(`/viewer/${id}`)}
+                className="w-full py-6 rounded-2xl font-semibold text-lg transition-all hover:scale-[1.03] hover:shadow-[0_12px_30px_rgba(168,85,247,0.35)] flex items-center justify-center gap-2"
+              >
+                🔓 View Guide
+              </Button>
             )}
           </div>
 
-          {/* RIGHT INFO SECTION */}
-          <div className="space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white">
-              {guide.title}
-            </h1>
-
-            <p className="text-sm text-grey">
-              Subject:{" "}
-              <span className="font-semibold capitalize">
-                {guide.subject || guide.category}
-              </span>
-            </p>
-
-            <p className="text-emerald-600 font-medium text-sm sm:text-base">
-              In stock – Instant PDF access
-            </p>
-
-            <div className="flex flex-col items-center lg:items-start gap-1">
-              <span className="text-sm text-white">Price</span>
-              <span className="text-2xl sm:text-3xl font-bold text-white">
-                ₹{guide.price || 49}
-              </span>
-            </div>
-
-            <div className="space-y-3 w-full max-w-sm">
-              {!userPurchased && (
-                <Button
-                  onClick={() => setShowPayment(true)}
-                  variant="purple"
-                >
-                  Buy Now
-                </Button>
-              )}
-
-              {userPurchased && (
-                <Button
-                  variant="purple"
-                  onClick={() => navigate(`/viewer/${id}`)}
-                  className="
-                    w-full py-3 rounded-full border-blue-300 
-                    text-white hover:bg-blue-50 hover:scale-none hover:shadow-none
-                    font-semibold flex items-center justify-center gap-2
-                  "
-                >
-                  <span className="text-white text-lg">🔓</span>
-                  View Guide
-                </Button>
-              )}
-            </div>
-
-            <p className="text-sm text-white pt-4 border-t border-border leading-relaxed">
+          <div className="pt-8 border-t border-border w-full">
+            <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
               {guide.description}
             </p>
-
-            <p className="text-xs text-white">
-              Note: This is a protected PDF. View online only – no downloads, no
-              expiry.
-            </p>
           </div>
+
+          <p className="text-xs text-gray-400">
+            Protected PDF • View online only • No downloads • Lifetime access
+          </p>
         </div>
       </div>
-
-      {showPayment && (
-        <PaymentModal guide={guide} onClose={() => setShowPayment(false)} />
-      )}
     </div>
-  );
+
+    {showPayment && (
+      <PaymentModal guide={guide} onClose={() => setShowPayment(false)} />
+    )}
+  </div>
+);
+
 }

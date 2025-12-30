@@ -48,7 +48,7 @@ const GuideCard = ({ guides }) => {
         grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 
         gap-6 sm:gap-8 lg:gap-10 
         px-3 sm:px-6 lg:px-20 
-        mt-10 sm:mt-14 mb-8 sm:mb-16
+        mt-10 sm:mt-14 mb-8 sm:mb-16 
       "
     >
       {safeGuides.map((guide, index) => {
@@ -101,10 +101,10 @@ const GuideCard = ({ guides }) => {
             className="relative group"
           >
             {/* subtle glow on hover */}
-           {/* Glow border */}
-{/* Hover border */}
-<div
-  className="
+            {/* Glow border */}
+            {/* Hover border */}
+            <div
+              className="
     absolute -inset-[1.5px]
     rounded-3xl
     border border-purple-500/70
@@ -113,12 +113,10 @@ const GuideCard = ({ guides }) => {
     group-hover:opacity-100
     pointer-events-none
   "
-/>
-
-
+            />
 
             <Card
-  className="
+              className="
     relative h-full flex flex-col
     rounded-3xl border border-border 
     bg-card backdrop-blur-sm 
@@ -127,8 +125,7 @@ const GuideCard = ({ guides }) => {
 -   overflow-hidden
     z-10
   "
->
-
+            >
               {/* IMAGE + PURCHASED BADGE */}
               <CardHeader className="pb-0 pt-0 px-0">
                 {/* removed inner bg and border so image bleeds to card edges */}
@@ -186,13 +183,13 @@ const GuideCard = ({ guides }) => {
                   {title}
                 </button>
 
-                <p className="text-xs sm:text-sm lg:text-[13px] xl:text-[12px] text-grey leading-relaxed mt-1">
+                {/* <p className="text-xs sm:text-sm lg:text-[13px] xl:text-[12px] text-grey leading-relaxed mt-1">
                   {description}
-                </p>
+                </p> */}
 
-                <p className="text-xs sm:text-sm font-semibold text-white mt-1">
+                {/* <p className="text-xs sm:text-sm font-semibold text-white mt-1">
                   Chapters: {chapters}
-                </p>
+                </p> */}
               </CardContent>
 
               {/* FOOTER */}
@@ -206,9 +203,7 @@ const GuideCard = ({ guides }) => {
                     >
                       {price}
                     </p>
-                    <p className="text-[11px] sm:text-xs text-grey">
-                      one-time
-                    </p>
+                    <p className="text-[11px] sm:text-xs text-grey">one-time</p>
                     {isPaid && (
                       <p className="text-[11px] sm:text-xs text-emerald-600 font-semibold mt-1">
                         Already purchased
@@ -218,10 +213,12 @@ const GuideCard = ({ guides }) => {
 
                   <Button
                     onClick={() =>
-                      navigate(`/book-detail/${guide._id}`, { state: { guide } })
+                      navigate(`/book-detail/${guide._id}`, {
+                        state: { guide },
+                      })
                     }
                     className="
-                    relative overflow-hidden
+                    relative overflow-hidden 
                 bg-gradient-to-r from-purple-500 to-indigo-600
                 px-6 py-2 rounded-full
                 transition-all duration-300

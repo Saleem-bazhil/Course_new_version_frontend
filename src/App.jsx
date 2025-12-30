@@ -13,6 +13,7 @@ import Signup from "./authentication/Signup";
 import CoursesUnderConstruction from "./courses/CourseUnderConstruction";
 import BookDetail from "./guidesection/BookDetail";
 import Dashboard from "./dashboard/Dashboard";
+import { ToastContainer } from "react-toastify";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -30,7 +31,9 @@ function AnimatedRoutes() {
   };
 
   return (
+    
     <AnimatePresence mode="wait">
+      
       <Routes location={location} key={location.pathname}>
         {/* <Route
           path="/guide"
@@ -167,6 +170,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
+    <ToastContainer theme="dark" position="top-right" />
       <ScrollToTop />
       <Navbar />
       <AnimatedRoutes />
