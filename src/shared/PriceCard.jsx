@@ -83,16 +83,16 @@ const PriceCard = () => {
         >
           <Card
             className="relative rounded-3xl overflow-hidden border border-transparent 
-            bg-white/70 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.06)]
+            bg-card backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.06)]
             hover:shadow-[0_15px_50px_rgba(0,0,0,0.10)] 
             transition-all duration-500 group"
           >
             {/* Top Glow Bar */}
-            <div className="absolute top-0 left-0 w-full h-[5px] bg-gradient-to-r from-blue-500 via-sky-500 to-indigo-500" />
+            <div className="absolute top-0 left-0 w-full h-[5px] bg-gradient-to-r from-violet-500 via-violet-500 to-indigo-500" />
 
             {/* Discount Tag */}
             <Badge
-              className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-emerald-600 
+              className="absolute top-4 right-4 bg-gradient-to-r from-violet-500 to-indigo-600
               text-white font-semibold text-xs px-3 py-1 rounded-full shadow-md"
             >
               83% OFF
@@ -100,7 +100,7 @@ const PriceCard = () => {
 
             {/* Header */}
             <CardHeader className="text-center pb-2 pt-8">
-              <h3 className="text-2xl font-bold tracking-tight text-gray-900">
+              <h3 className="text-2xl font-bold tracking-tight text-white">
                 {detail.subject}
               </h3>
               <div className="flex justify-center items-center gap-2 mt-2">
@@ -109,7 +109,7 @@ const PriceCard = () => {
                 </span>
                 <span
                   className="text-4xl font-extrabold text-transparent bg-clip-text 
-                  bg-gradient-to-r from-blue-600 to-indigo-600"
+                  bg-gradient-to-r from-violet-600 to-indigo-600"
                 >
                   ₹{detail.offer_price}
                 </span>
@@ -121,8 +121,8 @@ const PriceCard = () => {
               <ul className="space-y-4">
                 {detail.options.map((opt, idx) => (
                   <li key={idx} className="flex gap-3 items-center">
-                    <CheckCircle2 className="text-blue-600 h-5 w-5" />
-                    <span className="text-gray-700 font-medium">{opt}</span>
+                    <CheckCircle2 className="text-primary h-5 w-5" />
+                    <span className="text-white font-medium">{opt}</span>
                   </li>
                 ))}
               </ul>
@@ -132,9 +132,9 @@ const PriceCard = () => {
             <CardFooter className="px-8 pb-8 pt-6">
               <Button
                 className="w-full py-3 text-white font-semibold rounded-xl
-                bg-gradient-to-r from-blue-600 to-indigo-600
+                bg-gradient-to-r from-violet-600 to-indigo-600
                 shadow-md shadow-blue-500/20
-                hover:shadow-lg hover:shadow-blue-500/30 hover:brightness-110
+                hover:shadow-lg hover:shadow-violet-500/30 hover:brightness-110
                 transition-all duration-300"
               >
                 <Link to='/guide'>View Guide</Link>

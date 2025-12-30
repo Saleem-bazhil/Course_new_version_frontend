@@ -32,7 +32,7 @@ useEffect(() => {
   });
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-white via-blue-50/50 to-white">
+    <section className="min-h-screen ">
       <div className="pt-32 pb-20 px-4">
         <div className="container mx-auto text-center">
           {/* Header */}
@@ -45,14 +45,14 @@ useEffect(() => {
           >
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-3 sm:mb-4">
               Easy pass{" "}
-              <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-700 bg-clip-text text-transparent">
+              <span className=" text-violet-500">
                 Guides
               </span>
             </h1>
 
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-md sm:max-w-xl md:max-w-2xl mx-auto leading-relaxed">
               Premium 12th standard guides with{" "}
-              <strong className="text-blue-600 font-semibold">
+              <strong className="text-violet-500 font-semibold">
                 secure access
               </strong>
               , smart interface, and lifetime access — designed for excellence.
@@ -60,10 +60,10 @@ useEffect(() => {
           </motion.div>
 
           {/* Search Bar */}
-          <SearchFilter
+          {/* <SearchFilter
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-          />
+          /> */}
 
           {/* Guides */}
           <GuideCard guides={filteredGuides} />

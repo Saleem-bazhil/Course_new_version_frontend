@@ -16,8 +16,8 @@ export default function Header() {
 
   const isActive = (path) =>
     location.pathname === path
-      ? "text-primary font-semibold"
-      : "text-foreground/80";
+      ? "text-white font-semibold"
+      : "text-gray-300";
 
   useEffect(() => {
     const hasToken = !!localStorage.getItem(TOKEN_KEY);
@@ -48,14 +48,14 @@ export default function Header() {
                 alt="Skiez Pdf Books"
                 className="md:h-30 h-20  w-auto object-contain"
               />
-              <span className="text-xl sm:text-2xl md:text-2xl font-bold text-primary poppins-semibold tracking-wide truncate">
+              <span className="text-xl sm:text-2xl md:text-2xl font-bold text-white poppins-semibold tracking-wide truncate">
                 Easy pass Guide
               </span>
             </Link>
 
             {/* CENTER — DESKTOP MENU */}
             <nav className="hidden md:flex items-center space-x-8 lg:space-x-10">
-              <Link to="/" className={`poppins-medium ${isActive("/")}`}>
+              <Link to="/" className={`poppins-medium  ${isActive("/")}`}>
                 Home
               </Link>
               {isAuthenticated && (

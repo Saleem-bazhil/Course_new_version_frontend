@@ -66,12 +66,12 @@ const Dashboard = () => {
   }
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-white via-blue-50/50 to-white">
+    <section className="min-h-screen bg-background">
       <div className="pt-28 pb-16 px-4">
         <div className="container mx-auto">
           <div className="mb-8 text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-              My <span className="text-blue-600">Purchased Guides</span>
+              My <span className="text-primary">Purchased Guides</span>
             </h1>
             <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
               All the guides you&apos;ve unlocked with your account. Click

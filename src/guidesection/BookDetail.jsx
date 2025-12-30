@@ -114,11 +114,11 @@ useEffect(() => {
   // UI (STYLE FROM FIRST CODE)
   // -------------------------
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="bg-background min-h-screen">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-6 sm:py-8 mt-16 sm:mt-20">
         <Link
           to="/"
-          className="mb-4 inline-flex text-sm text-blue-600 hover:underline"
+          className="mb-4 inline-flex text-sm text-white hover:underline"
         >
           ← Back to guides
         </Link>
@@ -126,11 +126,11 @@ useEffect(() => {
         <div className="grid gap-8 lg:gap-10 lg:grid-cols-2">
           {/* LEFT IMAGE SECTION */}
           <div className="max-w-md mx-auto lg:mx-0 w-full">
-            <div className="border rounded-2xl bg-white p-3 sm:p-4 shadow-sm">
+            <div className="border rounded-2xl bg-card p-3 sm:p-4 shadow-sm">
               <img
                 src={activeImage}
                 alt={guide.title}
-                className="w-full max-h-[360px] sm:max-h-[430px] object-contain transition-transform duration-300 hover:scale-105"
+                className=" w-full max-h-[360px] sm:max-h-[430px] object-contain transition-transform duration-300 hover:scale-105"
               />
             </div>
 
@@ -143,8 +143,8 @@ useEffect(() => {
                     onClick={() => setActiveIndex(idx)}
                     className={`border rounded-xl p-1 min-w-[4.2rem] sm:min-w-[5rem] ${
                       idx === activeIndex
-                        ? "border-blue-600 ring-2 ring-blue-200"
-                        : "border-slate-300"
+                        ? "border-border border-purple-500"
+                        : "border-border"
                     }`}
                   >
                     <img
@@ -160,11 +160,11 @@ useEffect(() => {
 
           {/* RIGHT INFO SECTION */}
           <div className="space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-900">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white">
               {guide.title}
             </h1>
 
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-grey">
               Subject:{" "}
               <span className="font-semibold capitalize">
                 {guide.subject || guide.category}
@@ -176,8 +176,8 @@ useEffect(() => {
             </p>
 
             <div className="flex flex-col items-center lg:items-start gap-1">
-              <span className="text-sm text-slate-500">Price</span>
-              <span className="text-2xl sm:text-3xl font-bold text-slate-900">
+              <span className="text-sm text-white">Price</span>
+              <span className="text-2xl sm:text-3xl font-bold text-white">
                 ₹{guide.price || 49}
               </span>
             </div>
@@ -186,11 +186,7 @@ useEffect(() => {
               {!userPurchased && (
                 <Button
                   onClick={() => setShowPayment(true)}
-                  className="
-                    w-full py-3 rounded-full bg-gradient-to-r 
-                    from-blue-500 to-blue-700 hover:brightness-110 
-                    text-white font-semibold shadow-md
-                  "
+                  variant="purple"
                 >
                   Buy Now
                 </Button>
@@ -198,25 +194,25 @@ useEffect(() => {
 
               {userPurchased && (
                 <Button
-                  variant="outline"
+                  variant="purple"
                   onClick={() => navigate(`/viewer/${id}`)}
                   className="
                     w-full py-3 rounded-full border-blue-300 
-                    text-blue-700 hover:bg-blue-50 
+                    text-white hover:bg-blue-50 hover:scale-none hover:shadow-none
                     font-semibold flex items-center justify-center gap-2
                   "
                 >
-                  <span className="text-green-600 text-lg">🔓</span>
+                  <span className="text-white text-lg">🔓</span>
                   View Guide
                 </Button>
               )}
             </div>
 
-            <p className="text-sm text-slate-700 pt-4 border-t border-slate-200 leading-relaxed">
+            <p className="text-sm text-white pt-4 border-t border-border leading-relaxed">
               {guide.description}
             </p>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-white">
               Note: This is a protected PDF. View online only – no downloads, no
               expiry.
             </p>

@@ -101,25 +101,34 @@ const GuideCard = ({ guides }) => {
             className="relative group"
           >
             {/* subtle glow on hover */}
-            <div
-              className="
-                absolute -inset-[1px]
-                bg-gradient-to-r from-blue-400/35 via-blue-500/25 to-indigo-500/35
-                rounded-3xl blur-xl opacity-0
-                group-hover:opacity-100 transition-all duration-700
-              "
-            />
+           {/* Glow border */}
+{/* Hover border */}
+<div
+  className="
+    absolute -inset-[1.5px]
+    rounded-3xl
+    border border-purple-500/70
+    opacity-0
+    transition-all duration-300
+    group-hover:opacity-100
+    pointer-events-none
+  "
+/>
+
+
 
             <Card
-              className="
-                relative h-full flex flex-col
-                rounded-3xl border border-blue-100/70 
-                bg-white/90 backdrop-blur-sm 
-                shadow-sm hover:shadow-xl hover:-translate-y-2
-                transition-all duration-500
-                overflow-hidden z-10
-              "
-            >
+  className="
+    relative h-full flex flex-col
+    rounded-3xl border border-border 
+    bg-card backdrop-blur-sm 
+    shadow-sm hover:shadow-xl
+    transition-all duration-500
+-   overflow-hidden
+    z-10
+  "
+>
+
               {/* IMAGE + PURCHASED BADGE */}
               <CardHeader className="pb-0 pt-0 px-0">
                 {/* removed inner bg and border so image bleeds to card edges */}
@@ -148,7 +157,7 @@ const GuideCard = ({ guides }) => {
                     <div
                       className="
                         absolute top-3 left-3
-                        rounded-full bg-emerald-500/95 text-white
+                        rounded-full bg-purple-600 text-white
                         text-[10px] sm:text-xs font-semibold
                         px-2.5 py-1 flex items-center gap-1 shadow-sm
                       "
@@ -169,37 +178,35 @@ const GuideCard = ({ guides }) => {
                     })
                   }
                   className="
-                    text-sm sm:text-base font-extrabold text-slate-900 
-                    hover:text-blue-700 transition-colors
+                    text-sm sm:text-base font-extrabold text-white 
+                    hover:text-white transition-colors
                     lg:text-lg
                   "
                 >
                   {title}
                 </button>
 
-                <p className="text-xs sm:text-sm lg:text-[13px] xl:text-[12px] text-slate-700 leading-relaxed mt-1">
+                <p className="text-xs sm:text-sm lg:text-[13px] xl:text-[12px] text-grey leading-relaxed mt-1">
                   {description}
                 </p>
 
-                <p className="text-xs sm:text-sm font-semibold text-blue-600 mt-1">
+                <p className="text-xs sm:text-sm font-semibold text-white mt-1">
                   Chapters: {chapters}
                 </p>
               </CardContent>
 
               {/* FOOTER */}
-              <CardFooter className="px-5 sm:px-6 pt-2 pb-5 border-t border-blue-100/70 bg-slate-50/70 flex flex-col gap-2">
+              <CardFooter className="px-5 sm:px-6 pt-2 pb-5 border-t border-border bg-card flex flex-col gap-2">
                 <div className="flex items-end justify-between w-full">
                   <div>
                     <p
                       className="
-                        text-2xl sm:text-3xl font-extrabold 
-                        bg-gradient-to-r from-blue-600 to-indigo-600 
-                        bg-clip-text text-transparent
+                        text-2xl sm:text-3xl font-extrabold text-white 
                       "
                     >
                       {price}
                     </p>
-                    <p className="text-[11px] sm:text-xs text-gray-500">
+                    <p className="text-[11px] sm:text-xs text-grey">
                       one-time
                     </p>
                     {isPaid && (
@@ -214,10 +221,12 @@ const GuideCard = ({ guides }) => {
                       navigate(`/book-detail/${guide._id}`, { state: { guide } })
                     }
                     className="
-                      rounded-full px-5 sm:px-7 py-2 sm:py-2.5
-                      text-xs sm:text-sm font-semibold
-                      bg-blue-600 hover:bg-blue-700 
-                      text-white shadow-md
+                    relative overflow-hidden
+                bg-gradient-to-r from-purple-500 to-indigo-600
+                px-6 py-2 rounded-full
+                transition-all duration-300
+                hover:scale-110
+                hover:shadow-[0_0_25px_rgba(168,85,247,0.8)]
                     "
                   >
                     {isPaid ? "View Guide" : "Buy Now"}

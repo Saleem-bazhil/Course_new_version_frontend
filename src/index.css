@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: hsl(0 0% 100%);
+  /* --color-background: hsl(0 0% 100%); */
+  --color-background: #0A0A0A;
   --color-foreground: hsl(222 47% 11%);
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(222 47% 11%);
+  /* --color-card: hsl(0 0% 100%); */
+  --color-card: #171717;
+  --color-card-foreground: #FFFFFF;
   --color-popover: hsl(0 0% 100%);
   --color-popover-foreground: hsl(222 47% 11%);
-  --color-primary: hsl(221 83% 53%);
-  --color-primary-foreground: hsl(0 0% 100%);
-  --color-primary-dark: hsl(221 83% 38%);
+  --color-primary: #7F00FF;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-dark: #4A00E0;
   --color-primary-light: hsl(221 83% 68%);
   --color-accent: hsl(38 92% 50%);
   --color-accent-foreground: hsl(0 0% 100%);
@@ -17,10 +19,10 @@
   --color-secondary: hsl(214 32% 91%);
   --color-secondary-foreground: hsl(222 47% 11%);
   --color-muted: hsl(210 40% 96%);
-  --color-muted-foreground: hsl(215 16% 47%);
+  --color-muted-foreground: #FFFFFF;
   --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(0 0% 100%);
-  --color-border: hsl(214 32% 88%);
+  --color-border: #262626;
   --color-input: hsl(214 32% 91%);
   --color-ring: hsl(221 83% 53%);
   --radius: 0.75rem;
@@ -47,9 +49,14 @@
   * {
     @apply border-border outline-ring/50;
   }
-
+  .background{
+    @apply bg-neutral-950 text-white;
+  }
+  .text-grey{
+    @apply text-gray-400;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-white;
   }
 }
 @layer utilities{
