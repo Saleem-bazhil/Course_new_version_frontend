@@ -36,7 +36,7 @@ const GuideCard = ({ guides, forceView = false }) => {
     <div
       className="
       grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
-      gap-6 sm:gap-8 lg:gap-10
+      gap-10 sm:gap-8 lg:gap-10
       px-3 sm:px-6 lg:px-20
       mt-10 sm:mt-14 mb-8 sm:mb-16
     "
@@ -152,7 +152,7 @@ const GuideCard = ({ guides, forceView = false }) => {
                     <p className="text-2xl font-extrabold text-white">
                       {price}
                     </p>
-                    
+
                     {isPaid && (
                       <p className="text-xs text-emerald-600 font-semibold">
                         Already purchased
@@ -165,7 +165,7 @@ const GuideCard = ({ guides, forceView = false }) => {
                       navigate(isPaid ? `/viewer/${id}` : `/book-detail/${id}`)
                     }
                     className={
-                    " relative overflow-hidden bg-gradient-to-r from-purple-500 to-indigo-600  px-6 py-2 rounded-full  transition-all duration-300  hover:scale-110 "
+                      " relative overflow-hidden bg-gradient-to-r from-purple-500 to-indigo-600  px-6 py-2 rounded-full  transition-all duration-300  hover:scale-110 "
                     }
                   >
                     {isPaid ? "View Guide" : "Buy Now"}

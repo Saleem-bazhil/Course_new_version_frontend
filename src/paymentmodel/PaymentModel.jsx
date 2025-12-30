@@ -93,30 +93,67 @@ const PaymentModal = ({ guide, onClose }) => {
   };
 
   return (
-    <motion.div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-6 w-[380px] text-center relative">
-        <button onClick={onClose} className="absolute top-3 right-3">
-          <XCircle />
+ <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <motion.div
+        initial={{ scale: 0.9, y: 40 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 40 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="
+          relative bg-card backdrop-blur-xl
+          rounded-2xl shadow-2xl border border-border
+          w-[90%] sm:w-[400px] p-8 text-center
+        "
+      >
+
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-grey transition"
+        >
+          <XCircle className="h-5 w-5" />
         </button>
 
-        <h2 className="text-xl font-bold">{guide.title}</h2>
-        <p className="text-gray-500 mt-1">Lifetime Access</p>
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-white mb-1">
+          {guide.title}
+        </h2>
+        <p className="text-grey mb-6">
+          {guide.subject} • Lifetime Access
+        </p>
 
-        <div className="my-6">
-          <h3 className="text-3xl font-bold text-blue-600">
+        {/* 💰 Price Card */}
+        <div className="bg-card border border-border rounded-xl py-5 mb-6">
+          <h3 className="text-4xl font-bold text-violet-600">
             ₹{guide.price}
           </h3>
+          <p className="text-grey text-sm">
+            One-time payment
+          </p>
         </div>
 
-        <Button onClick={handlePayment} className="w-full">
+        {/* 💳 Pay Button */}
+        <Button
+          onClick={handlePayment}
+          className="
+            w-full py-3 rounded-xl text-lg font-semibold
+            bg-gradient-to-r from-violet-500 to-indigo-600
+            hover:brightness-110 text-white transition-all
+          "
+        >
           Pay Now
         </Button>
 
-        <div className="flex justify-center gap-2 text-xs mt-3">
-          <ShieldCheck className="w-4 h-4 text-green-500" />
-          Secure Razorpay Payment
+        {/* 🔒 Secure Payment */}
+        <div className="flex items-center justify-center gap-2 text-xs text-grey mt-4">
+          <ShieldCheck className="h-4 w-4 text-green-500" />
+          <span>100% Secure Payment with Razorpay</span>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
