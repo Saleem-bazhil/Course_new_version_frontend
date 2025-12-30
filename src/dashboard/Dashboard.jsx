@@ -8,58 +8,43 @@ const Dashboard = () => {
   const [guides, setGuides] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Get current logged-in user
-  let currentUserId = null;
-  try {
-    const rawUser = localStorage.getItem("user");
-    if (rawUser) {
-      const parsed = JSON.parse(rawUser);
-      currentUserId = parsed._id || parsed.id || null;
-    }
-  } catch {
-    currentUserId = null;
-  }
-
   useEffect(() => {
-    if (!currentUserId) {
-      navigate("/login");
-      return;
-    }
-
-    const fetchGuides = async () => {
+    const fetchPurchasedGuides = async () => {
       try {
-        const res = await api.get("/pdf");
-        const all = res.data?.data || [];
+        const rawUser = localStorage.getItem("user");
+        const token =
+          (rawUser && JSON.parse(rawUser)?.token) ||
+          localStorage.getItem("token");
 
-        // Filter to only guides the user has paid for (based on local paid flag)
-        const purchased = all.filter((guide) => {
-          const id = guide._id || guide.id;
-          if (!id) return false;
-          const key = `paid_${currentUserId}_${id}`;
-          return localStorage.getItem(key) === "true";
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+
+        // ✅ BACKEND IS SOURCE OF TRUTH
+        const res = await api.get("/payment/my-purchases", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
-        setGuides(purchased);
+        setGuides(res.data.data.guides || []);
       } catch (err) {
-        console.error("Error fetching guides for dashboard:", err);
+        console.error("Error fetching purchased guides:", err);
         setGuides([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchGuides();
-  }, [currentUserId, navigate]);
-
-  if (!currentUserId) {
-    return null;
-  }
+    fetchPurchasedGuides();
+  }, [navigate]);
 
   if (loading) {
     return (
       <section className="min-h-screen flex items-center justify-center bg-background pt-24">
-        <p className="text-sm md:text-base text-muted-foreground">
-          Loading your guides…
+        <p className="text-muted-foreground">
+          Loading your purchased guides…
         </p>
       </section>
     );
@@ -70,12 +55,11 @@ const Dashboard = () => {
       <div className="pt-28 pb-16 px-4">
         <div className="container mx-auto">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold">
               My <span className="text-primary">Purchased Guides</span>
             </h1>
-            <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-              All the guides you&apos;ve unlocked with your account. Click
-              &quot;View Guide&quot; to resume reading.
+            <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+              All the guides you&apos;ve unlocked with your account.
             </p>
           </div>
 
@@ -84,7 +68,7 @@ const Dashboard = () => {
               You haven&apos;t purchased any guides yet.
             </div>
           ) : (
-            <GuideCard guides={guides} />
+            <GuideCard guides={guides} forceView  />
           )}
         </div>
       </div>
@@ -93,5 +77,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
