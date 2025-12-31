@@ -69,7 +69,6 @@ export default function Header() {
             >
               Courses
             </Link>
-
             <Link
               to="/study-price"
               className={`poppins-medium nav-link ${isActive("/study-price")}`}

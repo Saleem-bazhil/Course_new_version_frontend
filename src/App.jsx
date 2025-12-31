@@ -14,6 +14,7 @@ import CoursesUnderConstruction from "./courses/CourseUnderConstruction";
 import BookDetail from "./guidesection/BookDetail";
 import Dashboard from "./dashboard/Dashboard";
 import { ToastContainer } from "react-toastify";
+import CourseDetail from "./courses/CourseDetail";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -144,6 +145,20 @@ function AnimatedRoutes() {
               transition={pageTransition}
             >
               <CoursesUnderConstruction />
+            </motion.div>
+          }
+        />
+          <Route
+          path="/courses-detail"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <CourseDetail />
             </motion.div>
           }
         />
