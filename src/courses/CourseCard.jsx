@@ -41,7 +41,7 @@ const CourseCard = () => {
                 className="
                   w-full h-full object-cover
                   transition-transform duration-500
-                  md:group-hover:scale-110
+                  
                 "
               />
 
@@ -86,7 +86,7 @@ const CourseCard = () => {
                     px-4 py-2
                     text-sm sm:text-base
                     rounded-lg
-                    bg-purple-600 hover:bg-purple-700
+                    bg-primary hover:bg-purple-700
                     transition
                     whitespace-nowrap
                   "

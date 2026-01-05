@@ -5,60 +5,79 @@ const CoursePriceCard = ({ course }) => {
   if (!course) return null;
 
   return (
-    <div className="rounded-2xl border border-neutral-800 bg-neutral-900/70 backdrop-blur-xl overflow-hidden shadow-xl">
+    <div className="
+      rounded-2xl
+      border border-white/10
+      bg-neutral-900/80 backdrop-blur
+      shadow-xl
+      overflow-hidden
+    ">
 
-      {/* PRICE HEADER */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-center">
-        <p className="text-xs uppercase tracking-wide opacity-90">
-          Limited Time Offer
+      {/* subtle top accent */}
+      <div className="h-1 bg-gradient-to-r from-purple-500 to-indigo-500" />
+
+      {/* price section */}
+      <div className="p-6 text-center space-y-2">
+        <p className="text-xs uppercase tracking-wider text-gray-400">
+          limited time offer
         </p>
 
-        <p className="text-4xl font-semibold mt-2">
+        <p className="text-4xl font-bold text-white">
           ₹{course.price}
         </p>
 
-        <p className="text-xs opacity-90 mt-1">
-          Save ₹{(course.originalPrice || 2999) - course.price} today
+        <p className="text-xs text-gray-400">
+          save ₹{(course.originalPrice || 2999) - course.price} today
         </p>
       </div>
 
-      {/* CONTENT */}
-      <div className="p-6 space-y-6">
+      {/* action */}
+      <div className="px-6">
         <a
           href={`/payment/${course._id}`}
-          className="block text-center bg-purple-600 hover:bg-purple-700 py-3 rounded-full font-medium transition shadow-lg shadow-purple-600/30"
+          className="
+            block text-center
+            bg-gradient-to-r from-violet-600 to-indigo-600
+                shadow-md shadow-blue-500/20 hover:bg-purple-700
+            py-3 rounded-xl font-semibold
+            transition
+          "
         >
-          Buy Now
+          buy now
         </a>
 
-        <p className="text-center text-xs text-gray-400">
+        <p className="mt-2 text-center text-xs text-gray-500">
           30-day money-back guarantee
         </p>
+      </div>
 
-        <div className="border-t border-neutral-800 pt-4">
-          <p className="text-sm font-medium mb-4">
-            This course includes:
-          </p>
+      {/* divider */}
+      <div className="my-5 border-t border-white/10" />
 
-          <ul className="space-y-3 text-sm text-gray-300">
-            <li className="flex gap-2 items-center">
-              <CheckCircle size={16} className="text-green-400" />
-              {course.hours} hours on-demand video
-            </li>
-            <li className="flex gap-2 items-center">
-              <CheckCircle size={16} className="text-green-400" />
-              Lifetime access
-            </li>
-            <li className="flex gap-2 items-center">
-              <CheckCircle size={16} className="text-green-400" />
-              Certificate of completion
-            </li>
-            <li className="flex gap-2 items-center">
-              <CheckCircle size={16} className="text-green-400" />
-              Full refund within 30 days
-            </li>
-          </ul>
-        </div>
+      {/* features */}
+      <div className="px-6 pb-6">
+        <p className="text-sm font-medium mb-4 text-white">
+          this course includes
+        </p>
+
+        <ul className="space-y-3 text-sm text-gray-300">
+          <li className="flex items-center gap-2">
+            <CheckCircle size={16} className="text-green-400" />
+            {course.hours} hours on-demand video
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle size={16} className="text-green-400" />
+            lifetime access
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle size={16} className="text-green-400" />
+            certificate of completion
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle size={16} className="text-green-400" />
+            full refund within 30 days
+          </li>
+        </ul>
       </div>
     </div>
   );

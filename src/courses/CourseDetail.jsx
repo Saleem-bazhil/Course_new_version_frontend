@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  ArrowLeft,
-  Star,
-  Users,
-  Clock,
-  PlayCircle,
-} from "lucide-react";
+import { Star, Users, Clock } from "lucide-react";
 
 import Coursecirculam from "./Coursecirculam";
 import CoursePriceCard from "./CoursePriceCard";
@@ -14,79 +8,93 @@ import CourseReview from "./CourseReview";
 import api from "../Api";
 
 const CourseDetail = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [courseDetail, setCourseDetail] = useState(null);
 
+  // fetch course details using id
   useEffect(() => {
     api
-      .get(`/courses/${id}`) 
-      .then((res) => {
-        console.log(res.data);
-        setCourseDetail(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .get(`/courses/${id}`)
+      .then((res) => setCourseDetail(res.data.data))
+      .catch(console.log);
   }, [id]);
 
+  // wait until data is ready
   if (!courseDetail) return null;
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-14 mt-30">
 
-        {/* LEFT CONTENT */}
-        <div className="lg:col-span-2 space-y-8">
+      {/* hero section */}
+      <section className="relative border-b border-white/10 mt-20">
+      {/* <div className="absolute h-32 w-2 bg-primary rounded-full"></div> */}
+        <div className="absolute bg-background" />
 
-          <h1 className="text-4xl font-semibold leading-tight">
-            {courseDetail.title}
-          </h1>
+        <div className="
+          relative px-30 mx-auto 
+          pt-14 pb-12
+          grid grid-cols-1 lg:grid-cols-3 gap-12
+        ">
 
-          <p className="text-gray-400 max-w-2xl leading-relaxed">
-            {courseDetail.description}
-          </p>
+          {/* left content */}
+          <div className="lg:col-span-2 space-y-4">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+              {courseDetail.title}
+            </h1>
 
-          <div className="flex flex-wrap gap-8 text-sm text-gray-300">
-            <span className="flex items-center gap-2">
-              <Star size={16} className="text-yellow-400" />
-              {courseDetail.rating || 4.8}
-            </span>
-            <span className="flex items-center gap-2">
-              <Users size={16} />
-              {courseDetail.students || "12,453"} students
-            </span>
-            <span className="flex items-center gap-2">
-              <Clock size={16} />
-              {courseDetail.hours} hours
-            </span>
-          </div>
+            <p className="text-gray-400 max-w-2xl text-lg leading-relaxed">
+              {courseDetail.description}
+            </p>
 
-          <div className="relative rounded-2xl overflow-hidden border border-neutral-800">
-            <img
-              src={courseDetail.image}
-              alt={courseDetail.title}
-              className="w-full h-[320px] object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <PlayCircle className="h-16 w-16 text-white/80" />
+            {/* stats */}
+            <div className="flex flex-wrap gap-6 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <Star size={16} className="text-yellow-400" />
+                {courseDetail.rating || 4.8}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Users size={16} />
+                {courseDetail.students || "12,453"} students
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Clock size={16} />
+                {courseDetail.hours} hours
+              </div>
+            </div>
+
+            {/* course image */}
+            <div className="
+              mt-4
+              rounded-2xl overflow-hidden
+              border border-white/10
+              shadow-2xl bg-black mt-6
+            ">
+              <img
+                src={courseDetail.image}
+                alt={courseDetail.title}
+                className="w-full h-[380px] object-cover"
+              />
             </div>
           </div>
-        </div>
 
-        {/* PRICE CARD */}
-        <div className="sticky top-24 h-fit">
-          <CoursePriceCard course={courseDetail} />
+          {/* price card */}
+          <aside className="lg:sticky lg:top-24 self-start">
+            <CoursePriceCard course={courseDetail} />
+          </aside>
         </div>
-      </div>
+      </section>
 
-      {/* CURRICULUM */}
-      <div className="max-w-7xl mx-auto px-6 mb-14">
+      {/* curriculum */}
+      <section className="max-w-7xl mx-auto ">
         <Coursecirculam chapters={courseDetail.chapters} />
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-6 pb-20">
+      {/* reviews */}
+      <section className="max-w-7xl mx-auto  py-10">
         <CourseReview />
-      </div>
+      </section>
     </div>
   );
 };
