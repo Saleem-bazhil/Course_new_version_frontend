@@ -14,12 +14,12 @@ import CourseReview from "./CourseReview";
 import api from "../Api";
 
 const CourseDetail = () => {
-  const { id } = useParams(); // ✅ get course id
+  const { id } = useParams(); 
   const [courseDetail, setCourseDetail] = useState(null);
 
   useEffect(() => {
     api
-      .get(`/courses/${id}`) // ✅ single course API
+      .get(`/courses/${id}`) 
       .then((res) => {
         console.log(res.data);
         setCourseDetail(res.data.data);
@@ -29,7 +29,7 @@ const CourseDetail = () => {
       });
   }, [id]);
 
-  if (!courseDetail) return null; // or loader
+  if (!courseDetail) return null;
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
