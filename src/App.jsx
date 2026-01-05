@@ -149,7 +149,7 @@ function AnimatedRoutes() {
           }
         />
           <Route
-          path="/courses-detail"
+          path="/courses-detail/:id"
           element={
             <motion.div
               initial="initial"
