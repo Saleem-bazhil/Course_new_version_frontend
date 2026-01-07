@@ -15,6 +15,8 @@ import BookDetail from "./guidesection/BookDetail";
 import Dashboard from "./dashboard/Dashboard";
 import { ToastContainer } from "react-toastify";
 import CourseDetail from "./courses/CourseDetail";
+import Course from "./myCourse/Course";
+import CourseDashboard from "./myCourse/CourseDashboard";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -176,7 +178,34 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
-        <Route path="/book-detail/:guideId" element={<BookDetail />} />
+        <Route path="/book-detail/:guideId" element={<motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <BookDetail />
+            </motion.div>} />
+        <Route path="/my-course/" element={<motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <Course />
+            </motion.div>}/>
+        <Route path="/my-course/:id" element={<motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <CourseDashboard />
+            </motion.div>}/>
+
       </Routes>
     </AnimatePresence>
   );

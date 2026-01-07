@@ -69,6 +69,12 @@ export default function Header() {
             >
               Courses
             </Link>
+              <Link
+              to="/my-course/"
+              className={`poppins-medium nav-link ${isActive("/courses")}`}
+            >
+              My Courses
+            </Link>
             <Link
               to="/study-price"
               className={`poppins-medium nav-link ${isActive("/study-price")}`}
@@ -144,6 +150,9 @@ export default function Header() {
         )}
 
         <Link to="/courses" onClick={() => setIsMenuOpen(false)}>
+          Courses
+        </Link>
+             <Link to="/my-course/" onClick={() => setIsMenuOpen(false)}>
           Courses
         </Link>
 
