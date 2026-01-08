@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageSquare, HelpCircle } from "lucide-react";
+import { MessageSquare, HelpCircle ,ChevronsLeft} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CourseSidebar from "./CourseSidebar";
 import VideoPlayer from "./VideoPlayer";
@@ -71,6 +71,8 @@ const mockModules = [
 
 const CourseDashboard = () => {
   const [currentLessonId, setCurrentLessonId] = useState("1-5");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   const currentLesson = mockModules
     .flatMap((m) => m.lessons)
@@ -83,11 +85,20 @@ const CourseDashboard = () => {
         modules={mockModules}
         currentLessonId={currentLessonId}
         onLessonSelect={setCurrentLessonId}
+         isOpen={isSidebarOpen}
+  onClose={() => setIsSidebarOpen(false)}
+
       />
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto p-6">
+          <button
+  onClick={() => setIsSidebarOpen(true)}
+  className="sm:hidden mb-4 px-4 py-2 rounded-lg bg-purple-600 text-white"
+>
+  <ChevronsLeft />
+</button>
           {/* Video Player */}
           <VideoPlayer title={currentLesson?.title || "Loading..."} />
 
