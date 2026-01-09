@@ -95,7 +95,7 @@ const CourseDashboard = () => {
         <div className="max-w-5xl mx-auto p-6">
           <button
   onClick={() => setIsSidebarOpen(true)}
-  className="sm:hidden mb-4 px-4 py-2 rounded-lg bg-purple-600 text-white"
+  className="sm:hidden mb-4 px-2 py-1 rounded-lg bg-purple-600 text-white"
 >
   <ChevronsLeft />
 </button>

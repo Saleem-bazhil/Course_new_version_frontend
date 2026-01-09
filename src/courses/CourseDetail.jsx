@@ -5,11 +5,13 @@ import { Star, Users, Clock } from "lucide-react";
 import Coursecirculam from "./Coursecirculam";
 import CoursePriceCard from "./CoursePriceCard";
 import CourseReview from "./CourseReview";
+import PaymentModal from "@/paymentmodel/PaymentModel";
 import api from "../Api";
 
 const CourseDetail = () => {
   const { id } = useParams();
   const [courseDetail, setCourseDetail] = useState(null);
+const [showPayment, setShowPayment] = useState(false);
 
   // fetch course details using id
   useEffect(() => {
@@ -81,7 +83,18 @@ const CourseDetail = () => {
 
           {/* price card */}
           <aside className="lg:sticky lg:top-24 self-start">
-            <CoursePriceCard course={courseDetail} />
+            <CoursePriceCard
+  course={courseDetail}
+  onBuy={() => setShowPayment(true)}
+/>
+
+            {showPayment && (
+  <PaymentModal
+    guide={courseDetail}
+    itemType="Course"
+    onClose={() => setShowPayment(false)}
+  />
+)}
           </aside>
         </div>
       </section>

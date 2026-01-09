@@ -1,7 +1,7 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
 
-const CoursePriceCard = ({ course }) => {
+const CoursePriceCard = ({ course, onBuy }) => {
   if (!course) return null;
 
   return (
@@ -12,11 +12,8 @@ const CoursePriceCard = ({ course }) => {
       shadow-xl
       overflow-hidden
     ">
-
-      {/* subtle top accent */}
       <div className="h-1 bg-gradient-to-r from-purple-500 to-indigo-500" />
 
-      {/* price section */}
       <div className="p-6 text-center space-y-2">
         <p className="text-xs uppercase tracking-wider text-gray-400">
           limited time offer
@@ -31,30 +28,27 @@ const CoursePriceCard = ({ course }) => {
         </p>
       </div>
 
-      {/* action */}
       <div className="px-6">
-        <a
-          href={`/payment/${course._id}`}
+        <button
+          onClick={onBuy}
           className="
-            block text-center
+            block w-full text-center
             bg-gradient-to-r from-violet-600 to-indigo-600
-                shadow-md shadow-blue-500/20 hover:bg-purple-700
+            shadow-md shadow-blue-500/20 hover:bg-purple-700
             py-3 rounded-xl font-semibold
             transition
           "
         >
           buy now
-        </a>
+        </button>
 
         <p className="mt-2 text-center text-xs text-gray-500">
           30-day money-back guarantee
         </p>
       </div>
 
-      {/* divider */}
       <div className="my-5 border-t border-white/10" />
 
-      {/* features */}
       <div className="px-6 pb-6">
         <p className="text-sm font-medium mb-4 text-white">
           this course includes

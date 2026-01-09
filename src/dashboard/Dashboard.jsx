@@ -11,26 +11,18 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPurchasedGuides = async () => {
       try {
-        const rawUser = localStorage.getItem("user");
-        const token =
-          (rawUser && JSON.parse(rawUser)?.token) ||
-          localStorage.getItem("token");
+        // ✅ Cookie-based auth (backend decides)
+        const res = await api.get("/payment/my-purchases");
 
-        if (!token) {
-          navigate("/login");
-          return;
-        }
-
-        // ✅ BACKEND IS SOURCE OF TRUTH
-        const res = await api.get("/payment/my-purchases", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setGuides(res.data.data.guides || []);
+        setGuides(res.data?.data?.guides || []);
       } catch (err) {
         console.error("Error fetching purchased guides:", err);
+
+        // 🔐 Not logged in
+        if (err.response?.status === 401) {
+          navigate("/login");
+        }
+
         setGuides([]);
       } finally {
         setLoading(false);
@@ -68,7 +60,7 @@ const Dashboard = () => {
               You haven&apos;t purchased any guides yet.
             </div>
           ) : (
-            <GuideCard guides={guides} forceView  />
+            <GuideCard guides={guides} forceView />
           )}
         </div>
       </div>

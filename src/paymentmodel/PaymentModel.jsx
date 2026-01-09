@@ -5,7 +5,7 @@ import { XCircle, ShieldCheck } from "lucide-react";
 import api from "../Api";
 import { useNavigate } from "react-router-dom";
 
-const PaymentModal = ({ guide, onClose }) => {
+const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
   const navigate = useNavigate();
 
   if (!guide) return null; // ✅ safety guard
@@ -22,10 +22,13 @@ const PaymentModal = ({ guide, onClose }) => {
         return;
       }
 
-      // 1️⃣ Create order
+      // 1️⃣ Create order (REUSABLE)
       const { data } = await api.post(
         "/payment/order",
-        { guideId: guide._id },
+        {
+          itemId: guide._id,
+          itemType, // Pdf | Course
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,7 +64,8 @@ const PaymentModal = ({ guide, onClose }) => {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_signature: response.razorpay_signature,
-                guideId: guide._id,
+                itemId: guide._id,
+                itemType, // Pdf | Course
               },
               {
                 headers: {
@@ -76,7 +80,13 @@ const PaymentModal = ({ guide, onClose }) => {
             }
 
             onClose();
-            navigate(`/viewer/${guide._id}`);
+
+            // 🔀 Redirect based on item type
+            if (itemType === "Course") {
+              navigate(`/courses/${guide._id}`);
+            } else {
+              navigate(`/viewer/${guide._id}`);
+            }
           } catch {
             alert("Verification failed");
           }
@@ -93,7 +103,7 @@ const PaymentModal = ({ guide, onClose }) => {
   };
 
   return (
- <motion.div
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -110,7 +120,6 @@ const PaymentModal = ({ guide, onClose }) => {
           w-[90%] sm:w-[400px] p-8 text-center
         "
       >
-
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-500 hover:text-grey transition"
