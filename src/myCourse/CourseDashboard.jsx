@@ -70,7 +70,7 @@ const CourseDashboard = () => {
             </Button>
           </div>
 
-          <NotesDiscussions />
+         <NotesDiscussions courseId={course._id} />
         </div>
       </main>
     </div>
