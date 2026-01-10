@@ -11,14 +11,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPurchasedGuides = async () => {
       try {
-        // ✅ Cookie-based auth (backend decides)
+        //  Cookie-based auth (backend decides)
         const res = await api.get("/payment/my-purchases");
 
         setGuides(res.data?.data?.guides || []);
       } catch (err) {
         console.error("Error fetching purchased guides:", err);
 
-        // 🔐 Not logged in
+        //  Not logged in
         if (err.response?.status === 401) {
           navigate("/login");
         }

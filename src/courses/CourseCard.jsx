@@ -5,17 +5,18 @@ import api from "../Api";
 const CourseCard = () => {
   const [course, setCourse] = useState([]);
 
-  useEffect(() => {
-    api
-      .get("/courses/")
-      .then((res) => {
-        console.log(res.data);
-        setCourse(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+useEffect(() => {
+  api
+    .get("/courses")
+    .then((res) => {
+      console.log(res.data);
+      setCourse(res.data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}, []);
+
 
   return (
     <>

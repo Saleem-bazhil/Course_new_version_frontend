@@ -196,7 +196,7 @@ function AnimatedRoutes() {
             >
               <Course />
             </motion.div>}/>
-        <Route path="/my-course/:id" element={<motion.div
+        <Route path="/my-course/:courseId" element={<motion.div
               initial="initial"
               animate="in"
               exit="out"

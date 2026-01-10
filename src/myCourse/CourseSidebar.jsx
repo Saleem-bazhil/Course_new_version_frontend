@@ -15,7 +15,7 @@ const getLessonIcon = (type) => {
 };
 
 const CourseSidebar = ({
-  modules,
+  modules = [],
   currentLessonId,
   onLessonSelect,
   isOpen,
@@ -67,90 +67,44 @@ const CourseSidebar = ({
 
           {/* Modules */}
           <div className="space-y-10">
-            {modules.map((module) => (
-              <div key={module.id} className="relative">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-purple-400 mb-4 pl-10">
-                  {module.title}
-                </h3>
+      {modules.map((chapter) => {
+  const isActive = chapter._id === currentLessonId;
 
-                {/* Timeline */}
-                <div className="absolute left-4 top-7 bottom-0 w-px bg-white/10" />
+  return (
+    <div
+      key={chapter._id}
+      onClick={() => {
+        onLessonSelect(chapter._id);
+        onClose();
+      }}
+      className={cn(
+        "relative flex gap-3 pl-10 pr-3 py-3 rounded-lg cursor-pointer",
+        isActive ? "bg-purple-500/10" : "hover:bg-white/5"
+      )}
+    >
+      {/* Dot */}
+      <div
+        className={cn(
+          "absolute left-4 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2",
+          isActive ? "border-purple-500" : "border-white/30"
+        )}
+      />
 
-                {module.lessons.map((lesson) => {
-                  const isActive = lesson.id === currentLessonId;
-                  const isCompleted = lesson.completed;
+      {/* Chapter text */}
+      <div className="flex-1 min-w-0">
+        <span className="text-sm font-medium text-white truncate">
+          {chapter.chapter_title}
+        </span>
 
-                  return (
-                    <div
-                      key={lesson.id}
-                      onClick={() => {
-                        onLessonSelect(lesson.id);
-                        onClose(); // close drawer on mobile
-                      }}
-                      className={cn(
-                        `
-                        relative flex gap-3
-                        pl-10 pr-3 py-3
-                        rounded-lg cursor-pointer
-                        transition-all
-                      `,
-                        isActive
-                          ? "bg-purple-500/10"
-                          : "hover:bg-white/5"
-                      )}
-                    >
-                      {/* Dot */}
-                      <div
-                        className={cn(
-                          `
-                          absolute left-4 top-1/2
-                          -translate-x-1/2 -translate-y-1/2
-                          w-3 h-3 rounded-full border-2
-                          flex items-center justify-center
-                        `,
-                          isCompleted
-                            ? "bg-purple-500 border-purple-500"
-                            : isActive
-                            ? "border-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.9)]"
-                            : "border-white/30"
-                        )}
-                      >
-                        {isCompleted && (
-                          <CheckCircle2 className="w-3 h-3 text-black" />
-                        )}
-                      </div>
+        <div className="flex items-center gap-1 mt-1 text-xs text-white/40">
+          <Clock className="w-3 h-3" />
+          <span>{chapter.duration} mins</span>
+        </div>
+      </div>
+    </div>
+  );
+})}
 
-                      {/* Lesson text */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={cn(
-                              "text-sm font-medium truncate",
-                              isActive
-                                ? "text-white"
-                                : "text-white/80"
-                            )}
-                          >
-                            {lesson.title}
-                          </span>
-
-                          {getLessonIcon(lesson.type) && (
-                            <span className="text-white/40">
-                              {getLessonIcon(lesson.type)}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-1 mt-1 text-xs text-white/40">
-                          <Clock className="w-3 h-3" />
-                          <span>{lesson.duration}</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
           </div>
         </div>
       </aside>

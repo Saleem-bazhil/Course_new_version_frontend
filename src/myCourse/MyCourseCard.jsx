@@ -5,17 +5,15 @@ import api from "../Api";
 const MyCourseCard = () => {
   const [course, setCourse] = useState([]);
 
-  useEffect(() => {
-    api
-      .get("/courses/")
-      .then((res) => {
-        console.log(res.data);
-        setCourse(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+useEffect(() => {
+  api.get("/payment/my-purchases")
+    .then(res => {
+      setCourse(res.data.data.courses || []);
+    })
+    .catch(console.error);
+}, []);
+
+
 
   return (
     <>
@@ -81,7 +79,7 @@ const MyCourseCard = () => {
                 </span>
 
                 <Link
-                  to={`/my-course/dashboard/`}
+                  to={`/my-course/${item._id}`}
                   className="
                     px-4 py-2
                     text-sm sm:text-base
