@@ -33,19 +33,22 @@ const CourseSidebar = ({
       />
 
       {/* ===== Sidebar ===== */}
-      <aside
-        className={cn(
-          `
-            fixed sm:relative z-50
-            bg-[#0B0B0B] border-r border-white/10
-            h-full overflow-y-auto
-            transition-transform duration-300 ease-in-out
-          `,
-          "w-[85%] max-w-[320px] sm:w-72",
-          isOpen ? "translate-x-0" : "-translate-x-full",
-          "sm:translate-x-0"
-        )}
-      >
+   <aside
+  className={cn(
+    `
+      fixed sm:relative z-40
+      top-16 sm:top-0
+      bg-[#0B0B0B] border-r border-white/10
+      h-[calc(100vh-4rem)] sm:h-full
+      overflow-y-auto
+      transition-transform duration-300 ease-in-out
+    `,
+    "w-[85%] max-w-[320px] sm:w-72",
+    isOpen ? "translate-x-0" : "-translate-x-full",
+    "sm:translate-x-0"
+  )}
+>
+
         <div className="p-4 sm:p-5">
           {/* Mobile header */}
           <div className="flex items-center justify-between sm:hidden mb-4">

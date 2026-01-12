@@ -1,31 +1,31 @@
-import { useState } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Bold,
   Italic,
-  Underline,
-  Strikethrough,
+  Underline as UnderlineIcon,
   List,
   ListOrdered,
-  Link,
-  Image,
+  Heading1,
+  Heading2,
   Code,
+  Quote,
+  Undo,
+  Redo,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
-const toolbarButtons = [
-  { icon: Bold, label: "Bold", format: "bold" },
-  { icon: Italic, label: "Italic", format: "italic" },
-  { icon: Underline, label: "Underline", format: "underline" },
-  { icon: Strikethrough, label: "Strikethrough", format: "strikethrough" },
-  { type: "divider" },
-  { icon: List, label: "Bullet List", format: "bulletList" },
-  { icon: ListOrdered, label: "Numbered List", format: "orderedList" },
-  { type: "divider" },
-  { icon: Link, label: "Link", format: "link" },
-  { icon: Image, label: "Image", format: "image" },
-  { icon: Code, label: "Code", format: "code" },
-];
+const ToolbarButton = ({ onClick, children }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="p-2 rounded hover:bg-white/10"
+  >
+    {children}
+  </button>
+);
 
 const RichTextEditor = ({
   title,
@@ -35,74 +35,104 @@ const RichTextEditor = ({
   onSave,
   onCancel,
 }) => {
-  const [activeFormats, setActiveFormats] = useState([]);
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+      }),
+      Underline,
+    ],
+    content: content || "",
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-invert max-w-none min-h-[200px] focus:outline-none",
+      },
+    },
+    onUpdate: ({ editor }) => {
+      onContentChange(editor.getHTML());
+    },
+  });
 
-  const toggleFormat = (format) => {
-    setActiveFormats((prev) =>
-      prev.includes(format)
-        ? prev.filter((f) => f !== format)
-        : [...prev, format]
-    );
-  };
+  // REQUIRED for edit mode
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content || "");
+    }
+  }, [content, editor]);
+
+  if (!editor) return null;
 
   return (
-    <div className="border border-border rounded-lg overflow-hidden bg-card">
-      {/* Toolbar */}
-      <div className="rich-editor-toolbar border-b border-border">
-        {toolbarButtons.map((btn, index) =>
-          btn.type === "divider" ? (
-            <div key={index} className="w-px h-6 bg-border mx-1" />
-          ) : (
-            <button
-              key={btn.format}
-              onClick={() => toggleFormat(btn.format)}
-              className={cn(
-                "rich-editor-btn",
-                activeFormats.includes(btn.format) && "active"
-              )}
-              title={btn.label}
-              type="button"
-            >
-              {btn.icon && <btn.icon className="w-4 h-4" />}
-            </button>
-          )
-        )}
+    <div className="border border-white/10 rounded-lg p-4 space-y-3">
+      {/* TITLE */}
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => onTitleChange(e.target.value)}
+        placeholder="Title"
+        className="w-full bg-transparent text-white text-lg outline-none"
+      />
+
+      {/*  WORD-LIKE TOOLBAR */}
+      <div className="flex flex-wrap gap-1 border border-white/10 rounded p-2">
+        <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()}>
+          <Bold size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <Italic size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleUnderline().run()}>
+          <UnderlineIcon size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+          <Heading1 size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
+          <Heading2 size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleBulletList().run()}>
+          <List size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+          <ListOrdered size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+          <Quote size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+          <Code size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().undo().run()}>
+          <Undo size={16} />
+        </ToolbarButton>
+
+        <ToolbarButton onClick={() => editor.chain().focus().redo().run()}>
+          <Redo size={16} />
+        </ToolbarButton>
       </div>
 
-      {/* Editor Content */}
-      <div className="p-4 space-y-3">
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          placeholder="Title"
-          className="w-full bg-transparent text-foreground text-lg font-medium placeholder:text-muted-foreground focus:outline-none"
-        />
+      {/* EDITOR */}
+      <EditorContent
+        editor={editor}
+        className="border border-white/10 p-3 rounded-md text-white"
+      />
 
-        <textarea
-          value={content}
-          onChange={(e) => onContentChange(e.target.value)}
-          placeholder="Take a Note"
-          className="w-full h-32 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none resize-none text-sm leading-relaxed"
-        />
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-3 px-4 pb-4">
-        <Button
-          variant="outline"
-          onClick={onCancel}
-          className="border-border text-muted-foreground hover:text-foreground"
-        >
-          CANCEL
+      {/* ACTIONS */}
+      <div className="flex justify-end gap-3">
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
         </Button>
-
-        <Button
-          onClick={onSave}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground"
-        >
-          SAVE
-        </Button>
+        <Button onClick={onSave}>Save</Button>
       </div>
     </div>
   );

@@ -34,15 +34,15 @@ const CourseDashboard = () => {
       .catch(() => navigate("/my-course"));
   }, [courseId, navigate]);
 
-  // ⛔ IMPORTANT GUARD
+  //  IMPORTANT GUARD
   if (!course) {
     return <div className="text-center mt-40">Loading course...</div>;
   }
 
   return (
-    <div className="flex h-screen bg-background mt-22">
+    <div className="flex h-screen bg-background mt-22 ">
       <CourseSidebar
-        modules={course.chapters || []}   // ✅ ALWAYS ARRAY
+        modules={course.chapters || []}   //  ALWAYS ARRAY
         currentLessonId={currentLessonId}
         onLessonSelect={setCurrentLessonId}
         isOpen={isSidebarOpen}
