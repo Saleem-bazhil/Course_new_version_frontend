@@ -217,7 +217,7 @@ const handleSaveNote = async () => {
         </div>
       </div>
 
-      {/* ✅ RENDER HTML CORRECTLY */}
+      {/*  RENDER HTML CORRECTLY */}
      <div
   className="prose prose-invert max-w-none mt-2 whitespace-pre-wrap break-words"
   style={{

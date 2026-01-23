@@ -16,13 +16,15 @@ const CourseDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get(`/courses/${courseId}`)
-      .then(res => {
+    api
+      .get(`/courses/${courseId}`)
+      .then((res) => {
         if (!res.data.data.isPurchased) {
           alert("You have not purchased this course");
           navigate("/my-course");
           return;
         }
+        console.log(res.data);
 
         setCourse(res.data.data);
 
@@ -38,11 +40,23 @@ const CourseDashboard = () => {
   if (!course) {
     return <div className="text-center mt-40">Loading course...</div>;
   }
+  // find selected chapter (fallback to first)
+  const selectedChapter =
+    course.chapters?.find((c) => c._id === currentLessonId) ||
+    course.chapters?.[0] ||
+    null;
 
+  // derive video URL from chapter or fallback to course.video_url
+  const videoUrl =
+    selectedChapter?.video_url ||
+    selectedChapter?.videoUrl ||
+    selectedChapter?.url ||
+    course.video_url ||
+    null;
   return (
     <div className="flex h-screen bg-background mt-22 ">
       <CourseSidebar
-        modules={course.chapters || []}   //  ALWAYS ARRAY
+        modules={course.chapters || []} //  ALWAYS ARRAY
         currentLessonId={currentLessonId}
         onLessonSelect={setCurrentLessonId}
         isOpen={isSidebarOpen}
@@ -58,7 +72,7 @@ const CourseDashboard = () => {
             <ChevronsLeft />
           </button>
 
-          <VideoPlayer title="Lesson Video" />
+          <VideoPlayer title="Lesson Video" videoUrl={videoUrl} />
 
           <div className="flex items-center gap-4 mt-4">
             <Button variant="ghost" className="bg-primary/10 gap-2">
@@ -70,7 +84,7 @@ const CourseDashboard = () => {
             </Button>
           </div>
 
-         <NotesDiscussions courseId={course._id} />
+          <NotesDiscussions courseId={course._id} />
         </div>
       </main>
     </div>
