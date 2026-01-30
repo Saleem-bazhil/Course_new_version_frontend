@@ -3,7 +3,7 @@ import axios from "axios";
 
 const api = axios.create({
   // baseURL: "https://pdfweb-frontend.onrender.com/api",
-  baseURL: "http://localhost:5050/api",
+  baseURL: "https://www.skiezpdfbooks.in/api",
   withCredentials: false,
 });
 
