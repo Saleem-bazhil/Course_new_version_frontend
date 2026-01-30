@@ -33,7 +33,7 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!data?.success) {
@@ -43,6 +43,25 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
 
       const order = data.data.order;
 
+      // Log the backend order response so we can debug mismatches
+      console.log("[Payment] created order:", { order, rawResponse: data });
+
+      // Normalize amount -> Razorpay expects integer amount in paise
+      let amountToUse = Number(order?.amount ?? order?.amount_in_paisa ?? 0);
+      if (isNaN(amountToUse) || amountToUse <= 0) {
+        // Fallback to guide.price if backend didn't return a valid amount
+        amountToUse = Math.round((guide.price || 0) * 100);
+      } else if (amountToUse < 1000) {
+        // If value looks like rupees (small number), convert to paise
+        amountToUse = Math.round(amountToUse * 100);
+      }
+
+      // Order id may be under different keys depending on backend
+      const orderId =
+        order?.id || order?.order_id || order?.razorpay_order_id || order?._id;
+
+      console.log("[Payment] normalized:", { amountToUse, orderId });
+
       if (!window.Razorpay) {
         alert("Razorpay SDK not loaded");
         return;
@@ -50,11 +69,11 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY,
-        amount: order.amount,
+        amount: amountToUse,
         currency: order.currency,
         name: "Skiez Pdf Books",
         description: guide.title,
-        order_id: order.id,
+        order_id: orderId,
 
         handler: async (response) => {
           try {
@@ -71,7 +90,7 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
-              }
+              },
             );
 
             if (!verify.data.success) {
@@ -95,7 +114,13 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
         theme: { color: "#7F00FF" },
       };
 
-      new window.Razorpay(options).open();
+      try {
+        console.log("[Payment] opening Razorpay", options);
+        new window.Razorpay(options).open();
+      } catch (openErr) {
+        console.error("[Payment] Razorpay open error:", openErr);
+        alert("Unable to open Razorpay checkout. See console for details.");
+      }
     } catch (err) {
       console.error(err);
       alert("Payment failed");
@@ -128,21 +153,13 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
         </button>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-white mb-1">
-          {guide.title}
-        </h2>
-        <p className="text-grey mb-6">
-          {guide.subject} • Lifetime Access
-        </p>
+        <h2 className="text-2xl font-bold text-white mb-1">{guide.title}</h2>
+        <p className="text-grey mb-6">{guide.subject} • Lifetime Access</p>
 
         {/* 💰 Price Card */}
         <div className="bg-card border border-border rounded-xl py-5 mb-6">
-          <h3 className="text-4xl font-bold text-violet-600">
-            ₹{guide.price}
-          </h3>
-          <p className="text-grey text-sm">
-            One-time payment
-          </p>
+          <h3 className="text-4xl font-bold text-violet-600">₹{guide.price}</h3>
+          <p className="text-grey text-sm">One-time payment</p>
         </div>
 
         {/* 💳 Pay Button */}
