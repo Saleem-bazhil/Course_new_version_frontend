@@ -123,8 +123,10 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
       }
     } catch (err) {
       console.error(err);
-      alert("Payment failed");
+      const errorMessage = err.response?.data?.message || err.message || "Payment failed";
+      alert(errorMessage);
     }
+
   };
 
   return (
@@ -156,13 +158,13 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
         <h2 className="text-2xl font-bold text-white mb-1">{guide.title}</h2>
         <p className="text-grey mb-6">{guide.subject} • Lifetime Access</p>
 
-        {/* 💰 Price Card */}
+        {/*  Price Card */}
         <div className="bg-card border border-border rounded-xl py-5 mb-6">
           <h3 className="text-4xl font-bold text-violet-600">₹{guide.price}</h3>
           <p className="text-grey text-sm">One-time payment</p>
         </div>
 
-        {/* 💳 Pay Button */}
+        {/*  Pay Button */}
         <Button
           onClick={handlePayment}
           className="
@@ -174,7 +176,7 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
           Pay Now
         </Button>
 
-        {/* 🔒 Secure Payment */}
+        {/* Secure Payment */}
         <div className="flex items-center justify-center gap-2 text-xs text-grey mt-4">
           <ShieldCheck className="h-4 w-4 text-green-500" />
           <span>100% Secure Payment with Razorpay</span>

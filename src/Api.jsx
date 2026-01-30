@@ -2,8 +2,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: "https://pdfweb-frontend.onrender.com/api",
-  baseURL: "https://api.skiezpdfbooks.in/api",
+  // baseURL: "https://api.skiezpdfbooks.in/api",
+  baseURL: "http://localhost:7000/api", 
   withCredentials: false,
 });
 
