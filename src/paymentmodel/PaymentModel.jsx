@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
   const navigate = useNavigate();
 
-  if (!guide) return null; // ✅ safety guard
+  if (!guide) return null; 
 
   const handlePayment = async () => {
     try {
@@ -22,7 +22,7 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
         return;
       }
 
-      // 1️⃣ Create order (REUSABLE)
+      // 1️ Create order 
       const { data } = await api.post(
         "/payment/order",
         {
@@ -43,20 +43,16 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
 
       const order = data.data.order;
 
-      // Log the backend order response so we can debug mismatches
-      console.log("[Payment] created order:", { order, rawResponse: data });
 
-      // Normalize amount -> Razorpay expects integer amount in paise
       let amountToUse = Number(order?.amount ?? order?.amount_in_paisa ?? 0);
       if (isNaN(amountToUse) || amountToUse <= 0) {
-        // Fallback to guide.price if backend didn't return a valid amount
+      
         amountToUse = Math.round((guide.price || 0) * 100);
       } else if (amountToUse < 1000) {
-        // If value looks like rupees (small number), convert to paise
+      
         amountToUse = Math.round(amountToUse * 100);
       }
 
-      // Order id may be under different keys depending on backend
       const orderId =
         order?.id || order?.order_id || order?.razorpay_order_id || order?._id;
 
@@ -100,7 +96,7 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
 
             onClose();
 
-            // 🔀 Redirect based on item type
+            // Redirect based on item type
             if (itemType === "Course") {
               navigate(`/courses/${guide._id}`);
             } else {
