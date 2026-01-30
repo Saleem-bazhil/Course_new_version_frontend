@@ -56,7 +56,7 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
       const orderId =
         order?.id || order?.order_id || order?.razorpay_order_id || order?._id;
 
-      console.log("[Payment] normalized:", { amountToUse, orderId });
+      // console.log("[Payment] normalized:", { amountToUse, orderId });
 
       if (!window.Razorpay) {
         alert("Razorpay SDK not loaded");
@@ -98,7 +98,7 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
 
             // Redirect based on item type
             if (itemType === "Course") {
-              navigate(`/courses/${guide._id}`);
+              navigate(`/my-course/`);
             } else {
               navigate(`/viewer/${guide._id}`);
             }
@@ -111,10 +111,10 @@ const PaymentModal = ({ guide, itemType = "Pdf", onClose }) => {
       };
 
       try {
-        console.log("[Payment] opening Razorpay", options);
+        // console.log("[Payment] opening Razorpay", options);
         new window.Razorpay(options).open();
       } catch (openErr) {
-        console.error("[Payment] Razorpay open error:", openErr);
+        // console.error("[Payment] Razorpay open error:", openErr);
         alert("Unable to open Razorpay checkout. See console for details.");
       }
     } catch (err) {
