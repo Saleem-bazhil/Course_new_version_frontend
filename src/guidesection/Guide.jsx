@@ -13,7 +13,7 @@ useEffect(() => {
   api
     .get("/pdf")
     .then((response) => {
-      console.log("pdf API Response:", response.data);
+      // console.log("pdf API Response:", response.data);
 
       setGuides(response.data.data || []);
     })
